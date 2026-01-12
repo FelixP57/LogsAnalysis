@@ -28,7 +28,56 @@ void LogStats::AnalyseLogs ( string filename, string graph = "", bool exclude = 
 // Algorithme :
 //
 {
+    // Get logs from reader
+    reader = LogReader.Load(filename);
+    if (grapher != "")
+	grapher.Setup(graph); // A changer
+    while (reader) {
+        // Flags
+	if (exclude) {
+	    if (reader.log.documentType == "js" || reader.log.documentType == "css" || reader.log.documentType == "png") {
+		reader = reader.Next();
+		continue;
+	    }
+	}
+	if (hour != -1) {
+	    if (reader.log.hour < hour*3600 || reader.log.hour > (hour + 1)*3600) {
+		reader = reader.Next();
+		continue;
+	    }
+	}
 
+	if (interactions.find(reader.log.target) == interactions.end()) {
+	    map<string, int> referrers;
+	    interactions.insert({reader.log.target, referrers});
+	}
+
+	map<string, int> referrers = interactions.find(reader.log.target)->second;
+	if (referrers.find(reader.log.referrer) == referrers.end()) {
+	    referrers.insert({reader.log.referrer, 0});
+	}
+	referrers[reader.log.referrer] += 1;
+	interactions[reader.log.target] = referrers;
+
+
+	if (hits.find(reader.log.target) == hits.end()) {
+	    hits.insert({reader.log.target, 0});
+        }
+	hits[reader.log.target] += 1;
+
+	reader = reader.Next();
+    }
+
+    if (graph) {
+	grapher.GenerateGraph(interactions);
+    }
+
+    multimap<int, string> stats = GetDocumentByHit();
+    int documentCount = 0;
+    for (multimap<int, string>::iterator itr = stats.end(); itr != stats.begin() && documentCount < 10; --itr) {
+	cout << itr->second << " (" << itr->first << " hits)" << endl;
+	++documentCount;
+    }
 } //----- Fin de Méthode
 
 multimap<int, string> LogStats::GetDocumentByHit ( )
