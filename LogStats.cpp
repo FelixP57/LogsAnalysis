@@ -1,5 +1,5 @@
 /*************************************************************************
-	       LogReader  -  Reads and parses an Apache Log 
+	       LogStats  -  Generates stats for Apache Logs 
 		 -------------------
     début                : 2026
     copyright            : (C) 12-01-2026 par Félix PIETRUCZANIS,
@@ -8,7 +8,7 @@
 					      Gerald CHAMBI RAMOS
 *************************************************************************/
 
-//---------- Réalisation de la classe <LogReader> (fichier LogReader.cpp) ------------
+//---------- Réalisation de la classe <LogStats> (fichier LogStats.cpp) ------------
 
 //---------------------------------------------------------------- INCLUDE
 
@@ -17,14 +17,14 @@ using namespace std;
 #include <iostream>
 
 //------------------------------------------------------ Include personnel
-#include "LogReader.h"
+#include "LogStats.h"
 
 //------------------------------------------------------------- Constantes
 
 //----------------------------------------------------------------- PUBLIC
 
 //----------------------------------------------------- Méthodes publiques
-// type LogReader::Méthode ( liste des paramètres )
+// type LogStats::Méthode ( liste des paramètres )
 // Algorithme :
 //
 //{
@@ -32,7 +32,7 @@ using namespace std;
 
 
 //------------------------------------------------- Surcharge d'opérateurs
-LogReader & LogReader::operator = ( const LogReader & unLogReader )
+LogStats & LogStats::operator = ( const LogStats & unLogStats )
 // Algorithme :
 //
 {
@@ -40,34 +40,34 @@ LogReader & LogReader::operator = ( const LogReader & unLogReader )
 
 
 //-------------------------------------------- Constructeurs - destructeur
-LogReader::LogReader ( const LogReader & unLogReader )
+LogStats::LogStats ( const LogStats & unLogStats )
 // Algorithme :
 //
 {
 #ifdef MAP
-    cout << "Appel au constructeur de copie de <LogReader>" << endl;
+    cout << "Appel au constructeur de copie de <LogStats>" << endl;
 #endif
-} //----- Fin de LogReader (constructeur de copie)
+} //----- Fin de LogStats (constructeur de copie)
 
 
-LogReader::LogReader ( )
+LogStats::LogStats ( )
 // Algorithme :
 //
 {
 #ifdef MAP
-    cout << "Appel au constructeur de <LogReader>" << endl;
+    cout << "Appel au constructeur de <LogStats>" << endl;
 #endif
-} //----- Fin de LogReader
+} //----- Fin de LogStats
 
 
-LogReader::~LogReader ( )
+LogStats::~LogStats ( )
 // Algorithme :
 //
 {
 #ifdef MAP
-    cout << "Appel au destructeur de <LogReader>" << endl;
+    cout << "Appel au destructeur de <LogStats>" << endl;
 #endif
-} //----- Fin de ~LogReader
+} //----- Fin de ~LogStats
 
 
 //------------------------------------------------------------------ PRIVE

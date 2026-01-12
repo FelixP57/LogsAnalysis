@@ -1,5 +1,5 @@
 /*************************************************************************
-	       LogReader  -  Reads and parses an Apache Log 
+	       LogStats  -  Generates stats for Apache Logs 
 		 -------------------
     début                : 2026
     copyright            : (C) 12-01-2026 par Félix PIETRUCZANIS,
@@ -8,9 +8,9 @@
 					      Gerald CHAMBI RAMOS
 *************************************************************************/
 
-//---------- Interface de la classe <LogReader> (fichier LogReader.h) ----------------
-#if ! defined ( LOGREADER_H )
-#define LOGREADER_H
+//---------- Interface de la classe <LogStats> (fichier LogStats.h) ----------------
+#if ! defined ( LOGSTATS_H )
+#define LOGSTATS_H
 
 //--------------------------------------------------- Interfaces utilisées
 
@@ -19,12 +19,12 @@
 //------------------------------------------------------------------ Types
 
 //------------------------------------------------------------------------
-// Rôle de la classe <LogReader>
+// Rôle de la classe <LogStats>
 //
 //
 //------------------------------------------------------------------------
 
-class LogReader : public Ancetre
+class LogStats : public Ancetre
 {
 //----------------------------------------------------------------- PUBLIC
 
@@ -38,7 +38,7 @@ public:
 
 
 //------------------------------------------------- Surcharge d'opérateurs
-    LogReader & operator = ( const LogReader & unLogReader );
+    LogStats & operator = ( const LogStats & unLogStats );
     // Mode d'emploi :
     //
     // Contrat :
@@ -46,19 +46,19 @@ public:
 
 
 //-------------------------------------------- Constructeurs - destructeur
-    LogReader ( const LogReader & unLogReader );
+    LogStats ( const LogStats & unLogStats );
     // Mode d'emploi (constructeur de copie) :
     //
     // Contrat :
     //
 
-    LogReader ( );
+    LogStats ( );
     // Mode d'emploi :
     //
     // Contrat :
     //
 
-    virtual ~LogReader ( );
+    virtual ~LogStats ( );
     // Mode d'emploi :
     //
     // Contrat :
@@ -73,7 +73,7 @@ protected:
 
 };
 
-//-------------------------------- Autres définitions dépendantes de <LogReader>
+//-------------------------------- Autres définitions dépendantes de <LogStats>
 
-#endif // LOGREADER_H
-    
+#endif // LOGSTATS_H
+
