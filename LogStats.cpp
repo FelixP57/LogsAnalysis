@@ -28,14 +28,18 @@ void LogStats::AnalyseLogs ( string filename, string graph = "", bool exclude = 
 // Algorithme :
 //
 {
-    
+
 } //----- Fin de Méthode
 
 multimap<int, string> LogStats::GetDocumentByHit ( )
 // Algorithme :
 //
 {
-
+    multimap<int, string> docHits;
+    for (const pair<string, int> & pair : hits) {
+        docHits.insert(make_pair(pair.second, pair.first));
+    }
+    return docHits;
 } //----- Fin de Méthode
 
 

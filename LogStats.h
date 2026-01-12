@@ -14,7 +14,7 @@
 
 //--------------------------------------------------- Interfaces utilisées
 #include <unordered_map>
-#include <multimap>
+#include <map>
 #include "LogReader.h"
 
 //------------------------------------------------------------- Constantes
@@ -70,7 +70,6 @@ protected:
     unordered_map<string, int> hits;
     LogReader logs;
     GraphMaker grapher;
-
 };
 
 //-------------------------------- Autres définitions dépendantes de <LogStats>
