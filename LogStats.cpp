@@ -29,7 +29,7 @@ void LogStats::AnalyseLogs ( string filename, string graph = "", bool exclude = 
 //
 {
     // Get logs from reader
-    reader = LogReader.Load(filename);
+    reader.Load(filename);
     if (grapher != "")
 	grapher.Setup(graph); // A changer
     while (reader) {
@@ -49,12 +49,12 @@ void LogStats::AnalyseLogs ( string filename, string graph = "", bool exclude = 
 
 	if (interactions.find(reader.log.target) == interactions.end()) {
 	    map<string, int> referrers;
-	    interactions.insert({reader.log.target, referrers});
+	    interactions.insert(pair<string, unordered_map<string, int>>(reader.log.target, referrers));
 	}
 
 	map<string, int> referrers = interactions.find(reader.log.target)->second;
 	if (referrers.find(reader.log.referrer) == referrers.end()) {
-	    referrers.insert({reader.log.referrer, 0});
+	    referrers.insert(pair<string, int>(reader.log.referrer, 0));
 	}
 	referrers[reader.log.referrer] += 1;
 	interactions[reader.log.target] = referrers;
@@ -68,7 +68,7 @@ void LogStats::AnalyseLogs ( string filename, string graph = "", bool exclude = 
 	reader = reader.Next();
     }
 
-    if (graph) {
+    if (graph != "") {
 	grapher.GenerateGraph(interactions);
     }
 
@@ -93,16 +93,6 @@ multimap<int, string> LogStats::GetDocumentByHit ( )
 
 
 //-------------------------------------------- Constructeurs - destructeur
-LogStats::LogStats ( const LogStats & unLogStats )
-// Algorithme :
-//
-{
-#ifdef MAP
-    cout << "Appel au constructeur de copie de <LogStats>" << endl;
-#endif
-} //----- Fin de LogStats (constructeur de copie)
-
-
 LogStats::LogStats ( )
 // Algorithme :
 //
