@@ -41,7 +41,6 @@ logStats(stats), outputGraphFilename(filename)
 GraphMaker::~GraphMaker(){
 
   if(outfile.is_open()){
-    outfile <<"}\n";
     outfile.close();
   }
 }
@@ -53,7 +52,23 @@ void GraphMaker::generateGraphFile(){
   //start
   outfile << "digraph {\n";
 
-  // fuckass algo doing the whole graph node thing;
+  // auto to now gaf about the type cuz im lazy
+  const auto& graph_umap = logStats.getGraph();
+
+  for(auto& pair: graph_umap){
+    const string& sourceNode = pair.first;
+    const auto& target_nodes = pair.second;
+
+    createNode(outfile, sourceNode);
+
+    // go through the nodes in the umap
+    for(const auto& node: target_nodes){
+      const string& targetNode = node.first;
+      long weight = node.second;
+
+      createLink(outfile, sourceNode, targetNode, weight);
+    }
+  }
 
   //end
   outfile << "}\n";
