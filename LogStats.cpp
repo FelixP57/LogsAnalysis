@@ -24,19 +24,19 @@ using namespace std;
 //----------------------------------------------------------------- PUBLIC
 
 //----------------------------------------------------- Méthodes publiques
-// type LogStats::Méthode ( liste des paramètres )
-// Algorithme :
-//
-//{
-//} //----- Fin de Méthode
-
-
-//------------------------------------------------- Surcharge d'opérateurs
-LogStats & LogStats::operator = ( const LogStats & unLogStats )
+void LogStats::AnalyseLogs ( string filename, string graph = "", bool exclude = false, int hour = -1 )
 // Algorithme :
 //
 {
-} //----- Fin de operator =
+    
+} //----- Fin de Méthode
+
+multimap<int, string> LogStats::GetDocumentByHit ( )
+// Algorithme :
+//
+{
+
+} //----- Fin de Méthode
 
 
 //-------------------------------------------- Constructeurs - destructeur
