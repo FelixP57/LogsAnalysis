@@ -53,7 +53,7 @@ void GraphMaker::generateGraphFile(){
   outfile << "digraph {\n";
 
   // auto to now gaf about the type cuz im lazy
-  const auto& graph_umap = logStats.getGraph();
+  const auto& graph_umap = logStats.getGraph(); // to change!
 
   for(auto& pair: graph_umap){
     const string& sourceNode = pair.first;
