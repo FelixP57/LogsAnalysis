@@ -13,6 +13,10 @@
 #define LOGSTATS_H
 
 //--------------------------------------------------- Interfaces utilisées
+#include <unordered_map>
+#include <map>
+#include "LogReader.h"
+#include "GraphMaker.h"
 
 //------------------------------------------------------------- Constantes
 
@@ -24,34 +28,27 @@
 //
 //------------------------------------------------------------------------
 
-class LogStats : public Ancetre
+class LogStats :
 {
 //----------------------------------------------------------------- PUBLIC
 
 public:
 //----------------------------------------------------- Méthodes publiques
-    // type Méthode ( liste des paramètres );
+    void AnalyseLogs(string filename, string graph="", bool exclude=false, int hour=-1);
     // Mode d'emploi :
-    //
+    //    Lit un fichier de logs, puis les analyse et renvoie les sites les plus consultés.
+    //    Selon les flags, lance la génération d'un fichier ou exclut certains logs.
     // Contrat :
-    //
+    //    hour est entre 0 et 23, graph est vide seulement si le flag n'est pas actif.
 
-
-//------------------------------------------------- Surcharge d'opérateurs
-    LogStats & operator = ( const LogStats & unLogStats );
+    multimap<int, string> GetDocumentByHit();
     // Mode d'emploi :
-    //
+    //     Retourne une multimap avec en clé le nombre de hit et en clé les documents accédés.
     // Contrat :
     //
 
 
 //-------------------------------------------- Constructeurs - destructeur
-    LogStats ( const LogStats & unLogStats );
-    // Mode d'emploi (constructeur de copie) :
-    //
-    // Contrat :
-    //
-
     LogStats ( );
     // Mode d'emploi :
     //
@@ -70,7 +67,10 @@ protected:
 //----------------------------------------------------- Méthodes protégées
 
 //----------------------------------------------------- Attributs protégés
-
+    unordered_map<string, unordered_map<string, int>> interactions;
+    unordered_map<string, int> hits;
+    LogReader logs;
+    GraphMaker grapher;
 };
 
 //-------------------------------- Autres définitions dépendantes de <LogStats>

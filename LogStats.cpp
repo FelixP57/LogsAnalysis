@@ -15,41 +15,87 @@
 //-------------------------------------------------------- Include système
 using namespace std;
 #include <iostream>
+#include <map>
 
 //------------------------------------------------------ Include personnel
 #include "LogStats.h"
+#include "LogReader.h"
+#include "GraphMaker.h"
 
 //------------------------------------------------------------- Constantes
 
 //----------------------------------------------------------------- PUBLIC
 
 //----------------------------------------------------- Méthodes publiques
-// type LogStats::Méthode ( liste des paramètres )
-// Algorithme :
-//
-//{
-//} //----- Fin de Méthode
-
-
-//------------------------------------------------- Surcharge d'opérateurs
-LogStats & LogStats::operator = ( const LogStats & unLogStats )
+void LogStats::AnalyseLogs ( string filename, string graph = "", bool exclude = false, int hour = -1 )
 // Algorithme :
 //
 {
-} //----- Fin de operator =
+    // Get logs from logs
+    logs.Load(filename);
+    if (grapher != "")
+	grapher.Setup(graph); // A changer
+    while (logs) {
+        // Flags
+	if (exclude) {
+	    if (logs.log.documentType == "js" || logs.log.documentType == "css" || logs.log.documentType == "png") {
+		logs = logs.Next();
+		continue;
+	    }
+	}
+	if (hour != -1) {
+	    if (logs.log.hour < hour*3600 || logs.log.hour > (hour + 1)*3600) {
+		logs = logs.Next();
+		continue;
+	    }
+	}
+
+	if (interactions.find(logs.log.target) == interactions.end()) {
+	    unordered_map<string, int> referrers;
+	    interactions.insert(pair<string, unordered_map<string, int>>(logs.log.target, referrers));
+	}
+
+	unordered_map<string, int> referrers = interactions.find(logs.log.target)->second;
+	if (referrers.find(logs.log.referrer) == referrers.end()) {
+	    referrers.insert(pair<string, int>(logs.log.referrer, 0));
+	}
+	referrers[logs.log.referrer] += 1;
+	interactions[logs.log.target] = referrers;
+
+
+	if (hits.find(logs.log.target) == hits.end()) {
+	    hits.insert({logs.log.target, 0});
+        }
+	hits[logs.log.target] += 1;
+
+	logs = logs.Next();
+    }
+
+    if (graph != "") {
+	grapher.GenerateGraph(interactions);
+    }
+
+    multimap<int, string> stats = GetDocumentByHit();
+    int documentCount = 0;
+    for (multimap<int, string>::iterator itr = stats.end(); itr != stats.begin() && documentCount < 10; --itr) {
+	cout << itr->second << " (" << itr->first << " hits)" << endl;
+	++documentCount;
+    }
+} //----- Fin de Méthode
+
+multimap<int, string> LogStats::GetDocumentByHit ( )
+// Algorithme :
+//
+{
+    multimap<int, string> docHits;
+    for (const pair<string, int> & pair : hits) {
+        docHits.insert(make_pair(pair.second, pair.first));
+    }
+    return docHits;
+} //----- Fin de Méthode
 
 
 //-------------------------------------------- Constructeurs - destructeur
-LogStats::LogStats ( const LogStats & unLogStats )
-// Algorithme :
-//
-{
-#ifdef MAP
-    cout << "Appel au constructeur de copie de <LogStats>" << endl;
-#endif
-} //----- Fin de LogStats (constructeur de copie)
-
-
 LogStats::LogStats ( )
 // Algorithme :
 //
@@ -57,6 +103,10 @@ LogStats::LogStats ( )
 #ifdef MAP
     cout << "Appel au constructeur de <LogStats>" << endl;
 #endif
+    interactions = unordered_map<string, unordered_map<string, int>>();
+    hits = unordered_map<string, int>();
+    logs = LogReader();
+    grapher = GraphMaker();
 } //----- Fin de LogStats
 
 
