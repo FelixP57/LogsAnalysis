@@ -9,8 +9,13 @@
 *************************************************************************/
 
 //---------- Interface de la classe <LogReader> (fichier LogReader.h) ----------------
-#if ! defined ( LOGREADER_H )
+#ifndef LOGREADER_H
 #define LOGREADER_H
+
+#include <fstream>
+#include <string>
+#include "LogEntry.h"
+using namespace std;
 
 //--------------------------------------------------- Interfaces utilisées
 
@@ -24,42 +29,31 @@
 //
 //------------------------------------------------------------------------
 
-class LogReader : public Ancetre
+class LogReader
 {
 //----------------------------------------------------------------- PUBLIC
 
 public:
 //----------------------------------------------------- Méthodes publiques
-    // type Méthode ( liste des paramètres );
-    // Mode d'emploi :
+    LogEntry readLine();
+    // Mode d'emploi : Lis la prochaine ligne du fichier associé au logstream
+    // et renvoie le LogEntry associe
     //
-    // Contrat :
-    //
-
-
-//------------------------------------------------- Surcharge d'opérateurs
-    LogReader & operator = ( const LogReader & unLogReader );
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
-
+    // Contrat : Le fichier doit être ouvert et valide
 
 //-------------------------------------------- Constructeurs - destructeur
     LogReader ( const LogReader & unLogReader );
-    // Mode d'emploi (constructeur de copie) :
+    // Mode d'emploi (constructeur de copie) : Renvoie juste un avertissement sur cout car copie inutile et dangereuse
     //
-    // Contrat :
-    //
+    // Contrat : Affiche un message d'avertissement à l'utilisateur
 
-    LogReader ( );
-    // Mode d'emploi :
+    LogReader(const std::string& file_path);
+    // Mode d'emploi : Crée un LogReader et ouvre le fichier spécifié par file_path
     //
-    // Contrat :
-    //
+    // Contrat : Le fichier doit exister et être accessible en lecture
 
     virtual ~LogReader ( );
-    // Mode d'emploi :
+    // Mode d'emploi : Ferme le fichier
     //
     // Contrat :
     //
@@ -70,7 +64,7 @@ protected:
 //----------------------------------------------------- Méthodes protégées
 
 //----------------------------------------------------- Attributs protégés
-
+    ifstream logstream;
 };
 
 //-------------------------------- Autres définitions dépendantes de <LogReader>

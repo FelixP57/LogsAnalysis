@@ -15,54 +15,134 @@
 //-------------------------------------------------------- Include système
 using namespace std;
 #include <iostream>
+#include <string>
+#include <fstream>
+#include <sstream>
 
 //------------------------------------------------------ Include personnel
 #include "LogReader.h"
+#include "LogEntry.h"
 
 //------------------------------------------------------------- Constantes
 
 //----------------------------------------------------------------- PUBLIC
 
 //----------------------------------------------------- Méthodes publiques
-// type LogReader::Méthode ( liste des paramètres )
-// Algorithme :
-//
-//{
-//} //----- Fin de Méthode
 
-
-//------------------------------------------------- Surcharge d'opérateurs
-LogReader & LogReader::operator = ( const LogReader & unLogReader )
+LogEntry LogReader::readLine()
 // Algorithme :
-//
+// 1. Lecture de la ligne brute du fichier log
+// 2. Parsing de l'adresse IP et des champs vides
+// 3. Extraction de la date et l'heure entre crochets
+// 4. Extraction de la requête HTTP (action, URL, protocole)
+// 5. Récupération du code de retour et de la taille de la réponse
+// 6. Extraction du referer et du user agent entre guillemets
+// Retour : Un objet LogEntry complètement rempli
 {
-} //----- Fin de operator =
+    string line;
+    // On récupère une ligne brute du fichier
+    getline(logstream, line); 
+    
+    // On transforme la ligne en flux pour la découper
+    istringstream iss(line); 
+    
+    LogEntry log;
+    string dump; // Variable poubelle pour stocker les tirets "-"
+    char car_ignore; // Pour consommer les crochets ou guillemets
+
+    // 1. Lecture de l'IP et des champs inutiles (- -)
+    iss >> log.client_ip >> dump >> dump;
+
+    // 2. Lecture de la Date : [08/Sep/2012:11:16:02 +0200]
+    iss.ignore(); // On saute l'espace avant le crochet
+    iss.ignore(); // On saute le crochet ouvrants '['
+    
+    // On lit jusqu'au crochet fermant ']'
+    string full_date_time;
+    getline(iss, full_date_time, ']');
+    
+    // On peut redécouper full_date_time maintenant
+    // Le format est "date:time". On cherche le ':'
+    size_t pos_deux_points = full_date_time.find(':');
+    if (pos_deux_points != string::npos) {
+        log.date = full_date_time.substr(0, pos_deux_points);
+        log.time = full_date_time.substr(pos_deux_points + 1);
+    }
+
+    iss.ignore(); // On saute l'espace après le ']'
+
+    // 3. Lecture de la requête complète : "GET /url HTTP/1.1"
+    iss.ignore(); // On saute le guillemet ouvrant '"'
+    string full_request;
+    getline(iss, full_request, '"');
+    
+    // La requête contient 3 infos séparées par des espaces. 
+    // On refait un stream local juste pour ce bout de chaîne !
+    stringstream ss_request(full_request);
+    ss_request >> log.action >> log.url >> log.protocol;
+
+    iss.ignore(); // On saute l'espace après le guillemet fermant
+
+    // 4. Code retour et Taille
+    iss >> log.r_code;
+    
+    // Attention : la taille peut être un tiret "-" si 0 octet
+    string size_str;
+    iss >> size_str;
+    if (size_str == "-") {
+        log.size = 0;
+    } else {
+        log.size = stoi(size_str);
+    }
+
+    // 5. Referer : "http://..."
+    iss.ignore(); // Espace
+    iss.ignore(); // Guillemet "
+    getline(iss, log.referer, '"');
+
+    // 6. User Agent : "Mozilla/5.0 ..."
+    iss.ignore(); // Espace
+    iss.ignore(); // Guillemet "
+    getline(iss, log.client_id, '"');
+
+    return log;
+} //----- Fin de readLine
 
 
 //-------------------------------------------- Constructeurs - destructeur
+
 LogReader::LogReader ( const LogReader & unLogReader )
-// Algorithme :
-//
+// Mode d'emploi : Constructeur de copie
+// Algorithme : Affiche un message d'avertissement (copie dangereuse et inutile)
 {
-#ifdef MAP
-    cout << "Appel au constructeur de copie de <LogReader>" << endl;
-#endif
-} //----- Fin de LogReader (constructeur de copie)
+    cout<<"ATTENTION: Appel du constructeur de copie de LogReader, mais copie dangereuse";
+
+} //----- Fin du constructeur de copie
 
 
-LogReader::LogReader ( )
-// Algorithme :
-//
+LogReader::LogReader(const std::string& file_path)
+// Mode d'emploi : Constructeur normal
+// Algorithme : 
+// 1. Ouverture du fichier log à partir du chemin spécifié
+// 2. Vérification de la validité de l'ouverture
+// 3. Affichage d'un message de succès ou d'erreur
 {
-#ifdef MAP
-    cout << "Appel au constructeur de <LogReader>" << endl;
-#endif
-} //----- Fin de LogReader
+    logstream.open(file_path.c_str());
+
+    // VERIFICATION INDISPENSABLE
+    if (!logstream.is_open()) {
+        cerr << "ERREUR FATALE : Le fichier n'a pas pu être ouvert !" << endl;
+        cerr << "Chemin tenté : " << file_path << endl;
+        cerr << "Vérifiez que le dossier 'LogsAnalysis' existe bien là où vous lancez l'exécutable." << endl;
+    } else {
+        cout << "SUCCES : Fichier ouvert correctement." << endl;
+    }
+} //----- Fin du constructeur normal
 
 
 LogReader::~LogReader ( )
-// Algorithme :
-//
+// Mode d'emploi : Destructeur
+// Algorithme : Ferme le flux de fichier et affiche un message de trace si MAP est défini
 {
 #ifdef MAP
     cout << "Appel au destructeur de <LogReader>" << endl;
