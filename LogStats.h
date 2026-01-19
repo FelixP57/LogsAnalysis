@@ -28,13 +28,13 @@
 //
 //------------------------------------------------------------------------
 
-class LogStats :
+class LogStats
 {
 //----------------------------------------------------------------- PUBLIC
 
 public:
 //----------------------------------------------------- Méthodes publiques
-    void AnalyseLogs(string filename, string graph="", bool exclude=false, int hour=-1);
+    void AnalyseLogs( GraphMaker *grapher = nullptr, bool exclude=false, int hour=-1 );
     // Mode d'emploi :
     //    Lit un fichier de logs, puis les analyse et renvoie les sites les plus consultés.
     //    Selon les flags, lance la génération d'un fichier ou exclut certains logs.
@@ -49,7 +49,7 @@ public:
 
 
 //-------------------------------------------- Constructeurs - destructeur
-    LogStats ( );
+    LogStats ( LogReader logReader );
     // Mode d'emploi :
     //
     // Contrat :
@@ -70,7 +70,6 @@ protected:
     unordered_map<string, unordered_map<string, int>> interactions;
     unordered_map<string, int> hits;
     LogReader logs;
-    GraphMaker grapher;
 };
 
 //-------------------------------- Autres définitions dépendantes de <LogStats>

@@ -27,7 +27,15 @@ using namespace std;
 //----------------------------------------------------- Méthodes publiques
 
 //-------------------------------------------- Constructeurs - destructeur
-GraphMaker::GraphMaker(const string& filename){
+GraphMaker::GraphMaker( const string& filename ){
+  // just creates the file, if error occurs, well.. use stderr!
+  outputGraphFilename = filename;
+  outfile.open(outputGraphFilename);
+
+  if(!outfile.is_open()){
+      // error whilst creating the file
+      cerr << "Error: Could not create the file " << outputGraphFilename << ".\n";
+  }
 
 }
 
@@ -40,19 +48,7 @@ GraphMaker::~GraphMaker(){
 }
 
 //--------------------------------------------------------------- Methodes
-void GraphMaker::setup(const string& filename){
-  // just creates the file, if error occurs, well.. use stderr!
-  outputGraphFilename = filename;
-  outfile.open(outputGraphFilename);
-
-  if(!outfile.is_open()){
-      // error whilst creating the file
-      cerr << "Error: Could not create the file " << outputGraphFilename << ".\n";
-  }
-
-}
-
-void GraphMaker::generateGraphFile(const unordered_map<string, unordered_map<string, int> >& graph_umap){
+void GraphMaker::GenerateGraphFile(const unordered_map<string, unordered_map<string, int> >& graph_umap){
 
   //start
   outfile << "digraph {\n";
