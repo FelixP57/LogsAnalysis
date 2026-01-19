@@ -49,7 +49,7 @@ public:
 
 
 //-------------------------------------------- Constructeurs - destructeur
-    LogStats ( LogReader logReader );
+    LogStats ( LogReader *reader );
     // Mode d'emploi :
     //
     // Contrat :
@@ -69,7 +69,7 @@ protected:
 //----------------------------------------------------- Attributs protégés
     unordered_map<string, unordered_map<string, int>> interactions;
     unordered_map<string, int> hits;
-    LogReader logs;
+    LogReader *logs;
 };
 
 //-------------------------------- Autres définitions dépendantes de <LogStats>
