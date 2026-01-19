@@ -15,6 +15,7 @@
 //-------------------------------------------------------- Include système
 using namespace std;
 #include <iostream>
+#include <map>
 
 //------------------------------------------------------ Include personnel
 #include "LogStats.h"
@@ -30,44 +31,44 @@ void LogStats::AnalyseLogs ( string filename, string graph = "", bool exclude = 
 // Algorithme :
 //
 {
-    // Get logs from reader
-    reader.Load(filename);
+    // Get logs from logs
+    logs.Load(filename);
     if (grapher != "")
 	grapher.Setup(graph); // A changer
-    while (reader) {
+    while (logs) {
         // Flags
 	if (exclude) {
-	    if (reader.log.documentType == "js" || reader.log.documentType == "css" || reader.log.documentType == "png") {
-		reader = reader.Next();
+	    if (logs.log.documentType == "js" || logs.log.documentType == "css" || logs.log.documentType == "png") {
+		logs = logs.Next();
 		continue;
 	    }
 	}
 	if (hour != -1) {
-	    if (reader.log.hour < hour*3600 || reader.log.hour > (hour + 1)*3600) {
-		reader = reader.Next();
+	    if (logs.log.hour < hour*3600 || logs.log.hour > (hour + 1)*3600) {
+		logs = logs.Next();
 		continue;
 	    }
 	}
 
-	if (interactions.find(reader.log.target) == interactions.end()) {
-	    map<string, int> referrers;
-	    interactions.insert(pair<string, unordered_map<string, int>>(reader.log.target, referrers));
+	if (interactions.find(logs.log.target) == interactions.end()) {
+	    unordered_map<string, int> referrers;
+	    interactions.insert(pair<string, unordered_map<string, int>>(logs.log.target, referrers));
 	}
 
-	map<string, int> referrers = interactions.find(reader.log.target)->second;
-	if (referrers.find(reader.log.referrer) == referrers.end()) {
-	    referrers.insert(pair<string, int>(reader.log.referrer, 0));
+	unordered_map<string, int> referrers = interactions.find(logs.log.target)->second;
+	if (referrers.find(logs.log.referrer) == referrers.end()) {
+	    referrers.insert(pair<string, int>(logs.log.referrer, 0));
 	}
-	referrers[reader.log.referrer] += 1;
-	interactions[reader.log.target] = referrers;
+	referrers[logs.log.referrer] += 1;
+	interactions[logs.log.target] = referrers;
 
 
-	if (hits.find(reader.log.target) == hits.end()) {
-	    hits.insert({reader.log.target, 0});
+	if (hits.find(logs.log.target) == hits.end()) {
+	    hits.insert({logs.log.target, 0});
         }
-	hits[reader.log.target] += 1;
+	hits[logs.log.target] += 1;
 
-	reader = reader.Next();
+	logs = logs.Next();
     }
 
     if (graph != "") {
