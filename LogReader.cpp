@@ -40,13 +40,14 @@ LogEntry LogReader::readLine()
 // Retour : Un objet LogEntry complètement rempli
 {
     string line;
+    LogEntry log;
     // On récupère une ligne brute du fichier
-    getline(logstream, line); 
+    if (!getline(logstream, line))
+	return log;
     
     // On transforme la ligne en flux pour la découper
     istringstream iss(line); 
     
-    LogEntry log;
     string dump; // Variable poubelle pour stocker les tirets "-"
     char car_ignore; // Pour consommer les crochets ou guillemets
 
@@ -69,6 +70,9 @@ LogEntry LogReader::readLine()
         log.time = full_date_time.substr(pos_deux_points + 1);
     }
 
+    // On récupère l'heure
+    log.hour = stoi(log.time.substr(0, 2));
+
     iss.ignore(); // On saute l'espace après le ']'
 
     // 3. Lecture de la requête complète : "GET /url HTTP/1.1"
@@ -80,6 +84,12 @@ LogEntry LogReader::readLine()
     // On refait un stream local juste pour ce bout de chaîne !
     stringstream ss_request(full_request);
     ss_request >> log.action >> log.url >> log.protocol;
+
+    size_t pos_point = log.url.find('.');
+    log.document_type = "";
+    if (pos_point != string::npos) {
+	log.document_type = log.url.substr(pos_point+1, log.url.length() - pos_point);
+    } 
 
     iss.ignore(); // On saute l'espace après le guillemet fermant
 
@@ -99,6 +109,25 @@ LogEntry LogReader::readLine()
     iss.ignore(); // Espace
     iss.ignore(); // Guillemet "
     getline(iss, log.referer, '"');
+
+    string base_url = "http://intranet-if.insa-lyon.fr";
+    size_t pos_base_url = log.referer.find(base_url);
+    if (pos_base_url != string::npos) {
+	log.referer = log.referer.substr(pos_base_url + base_url.length(), log.referer.length()-pos_base_url-base_url.length());
+    }
+
+    size_t pos_symbol = log.referer.find('?');
+    if (pos_base_url != string::npos) {
+	log.referer = log.referer.substr(0, pos_symbol);
+    }
+    pos_symbol = log.referer.find(';');
+    if (pos_base_url != string::npos) {
+	log.referer = log.referer.substr(0, pos_symbol);
+    }
+    pos_symbol = log.referer.find('#');
+    if (pos_base_url != string::npos) {
+	log.referer = log.referer.substr(0, pos_symbol);
+    }
 
     // 6. User Agent : "Mozilla/5.0 ..."
     iss.ignore(); // Espace
@@ -120,7 +149,7 @@ LogReader::LogReader ( const LogReader & unLogReader )
 } //----- Fin du constructeur de copie
 
 
-LogReader::LogReader(const std::string& file_path)
+LogReader::LogReader(const string& file_path)
 // Mode d'emploi : Constructeur normal
 // Algorithme : 
 // 1. Ouverture du fichier log à partir du chemin spécifié

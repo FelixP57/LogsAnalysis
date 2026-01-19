@@ -47,7 +47,7 @@ public:
     //
     // Contrat : Affiche un message d'avertissement à l'utilisateur
 
-    LogReader(const std::string& file_path);
+    LogReader(const string& file_path);
     // Mode d'emploi : Crée un LogReader et ouvre le fichier spécifié par file_path
     //
     // Contrat : Le fichier doit exister et être accessible en lecture

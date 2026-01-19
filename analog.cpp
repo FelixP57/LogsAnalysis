@@ -5,6 +5,8 @@
 // Estas cabeceras representarían las clases que debes desarrollar 
 // según la sección "Conception" del TP.
 #include "LogStats.h"
+#include "LogReader.h"
+#include "GraphMaker.h"
 
 using namespace std;
 
@@ -55,31 +57,12 @@ int main(int argc, char* argv[])
     }
 
     // 3. Ejecución de la lógica mediante la clase LogReader [cite: 72, 82]
-    LogStats analyzer;
+    LogReader reader(logFileName);
+    LogStats analyzer(&reader);
 
-    // Configurar filtros según las opciones capturadas
-    if (excludeResources) {
-        analyzer.EnableResourceFiltering(); 
-    }
-    if (selectedHour != -1) {
-        analyzer.SetTimeFilter(selectedHour);
-    }
+    GraphMaker grapher(dotFileName);
 
-    // Procesar el archivo [cite: 81]
-    if (!analyzer.LoadLogs(logFileName)) {
-        cerr << "Error al abrir o leer el archivo: " << logFileName << endl;
-        return 1;
-    }
-    
-    // Si se activó -g, generar el archivo GraphViz [cite: 57]
-    if (generateGraph) {
-        if (analyzer.ExportToDot(dotFileName)) {
-            cout << "Dot-file " << dotFileName << " generated" << endl;
-        }
-    }
-
-    // Por defecto, mostrar el Top 10 en consola [cite: 54]
-    analyzer.DisplayTop10();
+    analyzer.AnalyseLogs(&grapher, excludeResources, selectedHour);
 
     return 0;
 }
