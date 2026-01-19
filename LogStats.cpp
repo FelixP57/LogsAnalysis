@@ -27,59 +27,64 @@ using namespace std;
 //----------------------------------------------------------------- PUBLIC
 
 //----------------------------------------------------- Méthodes publiques
-void LogStats::AnalyseLogs ( string filename, string graph = "", bool exclude = false, int hour = -1 )
+void LogStats::AnalyseLogs ( GraphMaker *grapher = nullptr, bool exclude = false, int hour = -1 )
 // Algorithme :
 //
 {
-    // Get logs from logs
-    logs.Load(filename);
-    if (grapher != "")
-	grapher.Setup(graph); // A changer
     while (logs) {
         // Flags
-	if (exclude) {
-	    if (logs.log.documentType == "js" || logs.log.documentType == "css" || logs.log.documentType == "png") {
-		logs = logs.Next();
-		continue;
+	if (exclude)
+	{
+	    if (logs.log.documentType == "js" || logs.log.documentType == "css" || logs.log.documentType == "png")
+		{
+			logs = logs.Next();
+			continue;
 	    }
 	}
-	if (hour != -1) {
-	    if (logs.log.hour < hour*3600 || logs.log.hour > (hour + 1)*3600) {
-		logs = logs.Next();
-		continue;
+	if (hour != -1)
+	{
+	    if (logs.log.hour < hour*3600 || logs.log.hour > (hour + 1)*3600)
+		{
+			logs = logs.Next();
+			continue;
 	    }
 	}
 
-	if (interactions.find(logs.log.target) == interactions.end()) {
+	if (interactions.find(logs.log.target) == interactions.end())
+	{
 	    unordered_map<string, int> referrers;
 	    interactions.insert(pair<string, unordered_map<string, int>>(logs.log.target, referrers));
 	}
 
 	unordered_map<string, int> referrers = interactions.find(logs.log.target)->second;
-	if (referrers.find(logs.log.referrer) == referrers.end()) {
+	if (referrers.find(logs.log.referrer) == referrers.end())
+	{
 	    referrers.insert(pair<string, int>(logs.log.referrer, 0));
 	}
 	referrers[logs.log.referrer] += 1;
 	interactions[logs.log.target] = referrers;
 
 
-	if (hits.find(logs.log.target) == hits.end()) {
+	if (hits.find(logs.log.target) == hits.end())
+	{
 	    hits.insert({logs.log.target, 0});
-        }
+    }
 	hits[logs.log.target] += 1;
 
 	logs = logs.Next();
     }
 
-    if (graph != "") {
-	grapher.GenerateGraph(interactions);
+    if (grapher != nullptr)
+	{
+		grapher->GenerateGraphFile(interactions);
     }
 
     multimap<int, string> stats = GetDocumentByHit();
     int documentCount = 0;
-    for (multimap<int, string>::iterator itr = stats.end(); itr != stats.begin() && documentCount < 10; --itr) {
-	cout << itr->second << " (" << itr->first << " hits)" << endl;
-	++documentCount;
+    for (multimap<int, string>::iterator itr = stats.end(); itr != stats.begin() && documentCount < 10; --itr)
+{
+		cout << itr->second << " (" << itr->first << " hits)" << endl;
+		++documentCount;
     }
 } //----- Fin de Méthode
 
@@ -96,7 +101,7 @@ multimap<int, string> LogStats::GetDocumentByHit ( )
 
 
 //-------------------------------------------- Constructeurs - destructeur
-LogStats::LogStats ( )
+LogStats::LogStats ( LogReader logReader )
 // Algorithme :
 //
 {
@@ -105,8 +110,7 @@ LogStats::LogStats ( )
 #endif
     interactions = unordered_map<string, unordered_map<string, int>>();
     hits = unordered_map<string, int>();
-    logs = LogReader();
-    grapher = GraphMaker();
+    logs = logReader;
 } //----- Fin de LogStats
 
 

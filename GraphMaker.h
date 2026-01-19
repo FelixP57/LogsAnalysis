@@ -35,25 +35,18 @@ class GraphMaker{
 
   public:
   //----------------------------------------------------- Méthodes publiques
-      // type Méthode ( liste des paramètres );
-      // Mode d'emploi :
-      //
-      // Contrat :
-      //
-  //-------------------------------------------- Constructeurs - destructeur
-  GraphMaker();
-
-  ~GraphMaker();
-
-  void generateGraphFile(const unordered_map<string, unordered_map<string, int>>& analyzed_umap);
-
+  void GenerateGraphFile(const unordered_map<string, unordered_map<string, int>>& analyzed_umap);
   /* Generates a GraphViz .dot file for the corresponding graph deducted from analyze
    * Where each document (page) will apear under the form of a node et every 'link' indicates
    * the number of ocurrences associated.
    *
    * Returns: none but outputs to stderr depending if the creation of the file was succesful or not.
    */
-  void setup(const string& filename);
+
+  //-------------------------------------------- Constructeurs - destructeur
+  GraphMaker( const string& filename );
+
+  ~GraphMaker();
 
   //------------------------------------------------------------------ PRIVE
   private:
