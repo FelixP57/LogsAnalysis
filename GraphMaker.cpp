@@ -27,33 +27,32 @@ using namespace std;
 //----------------------------------------------------- Méthodes publiques
 
 //-------------------------------------------- Constructeurs - destructeur
-GraphMaker::GraphMaker(const string& filename){
-
-}
-
-GraphMaker::~GraphMaker(){
-
-  if(outfile.is_open()){
-    outfile.close();
-  }
-
-}
-
-//--------------------------------------------------------------- Methodes
-void GraphMaker::setup(const string& filename){
-  // just creates the file, if error occurs, well.. use stderr!
-  outputGraphFilename = filename;
+GraphMaker::GraphMaker(const string& filename) :
+outputGraphFilename(filename)
+{
   outfile.open(outputGraphFilename);
 
   if(!outfile.is_open()){
-      // error whilst creating the file
-      cerr << "Error: Could not create the file " << outputGraphFilename << ".\n";
+    // error whilst creating the file
+     cerr << "Error: Could not create the file " << outputGraphFilename << ".\n";
   }
-
 }
 
+GraphMaker::~GraphMaker(){
+  // close the file if for some reason it wasn't done before yo!
+  if(outfile.is_open()){
+      outfile.close();
+  }
+}
+
+//--------------------------------------------------------------- Methodes
 void GraphMaker::generateGraphFile(const unordered_map<string, unordered_map<string, int> >& graph_umap){
 
+  // double check to see if the thing is alright yo!
+  if (!outfile.is_open()) {
+    cerr << "Error: No file is open. can't create a .dot file from it" << endl;
+    return;
+  }
   //start
   outfile << "digraph {\n";
 
@@ -76,9 +75,14 @@ void GraphMaker::generateGraphFile(const unordered_map<string, unordered_map<str
   //end! yay
   outfile << "}\n";
 
+  if(outfile.is_open()){
+      outfile.close();
+  }
+
   cout << "Dot-file" << outputGraphFilename << "generated yo!" << endl;
 
   return;
+
 }
 
 inline void GraphMaker::createNode(ofstream& of, const string& nodeName){

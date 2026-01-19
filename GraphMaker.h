@@ -41,19 +41,18 @@ class GraphMaker{
       // Contrat :
       //
   //-------------------------------------------- Constructeurs - destructeur
-  GraphMaker();
+  GraphMaker(const string& filename);
 
   ~GraphMaker();
 
+  /* Generates a GraphViz .dot file for the corresponding graph deducted from analyze
+     * Where each document (page) will apear under the form of a node et every 'link' indicates
+     * the number of ocurrences associated.
+     *
+     * Returns: none but outputs to stderr depending if the creation of the file was succesful or not.
+     */
   void generateGraphFile(const unordered_map<string, unordered_map<string, int>>& analyzed_umap);
 
-  /* Generates a GraphViz .dot file for the corresponding graph deducted from analyze
-   * Where each document (page) will apear under the form of a node et every 'link' indicates
-   * the number of ocurrences associated.
-   *
-   * Returns: none but outputs to stderr depending if the creation of the file was succesful or not.
-   */
-  void setup(const string& filename);
 
   //------------------------------------------------------------------ PRIVE
   private:
@@ -65,7 +64,7 @@ class GraphMaker{
 
   //----------------------------------------------------- Attributs protégés
 
-    string outputGraphFilename;
+    const string outputGraphFilename;
     ofstream outfile;
 
 };
