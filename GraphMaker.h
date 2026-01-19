@@ -17,6 +17,7 @@
 // Include systeme
 #include <iostream>
 #include <fstream>
+#include <unordered_map>
 
 using namespace std;
 // Include user
@@ -40,18 +41,19 @@ class GraphMaker{
       // Contrat :
       //
   //-------------------------------------------- Constructeurs - destructeur
-  GraphMaker(const string& filename);
+  GraphMaker();
 
   ~GraphMaker();
+
+  void generateGraphFile(const unordered_map<string, unordered_map<string, int>>& analyzed_umap);
+
   /* Generates a GraphViz .dot file for the corresponding graph deducted from analyze
    * Where each document (page) will apear under the form of a node et every 'link' indicates
    * the number of ocurrences associated.
    *
-   * Returns: bool depending if the creation of the file was succesful or not.
+   * Returns: none but outputs to stderr depending if the creation of the file was succesful or not.
    */
-  void generateGraphFile();
-
-  void setup();
+  void setup(const string& filename);
 
   //------------------------------------------------------------------ PRIVE
   private:
@@ -63,7 +65,7 @@ class GraphMaker{
 
   //----------------------------------------------------- Attributs protégés
 
-    const string outputGraphFilename;
+    string outputGraphFilename;
     ofstream outfile;
 
 };

@@ -13,10 +13,10 @@
 //---------------------------------------------------------------- INCLUDE
 
 #include "GraphMaker.h"
-#include "LogStats.h"
 //-------------------------------------------------------- Include système
 #include <fstream>
 #include <iostream>
+#include <unordered_map>
 
 using namespace std;
 
@@ -27,9 +27,7 @@ using namespace std;
 //----------------------------------------------------- Méthodes publiques
 
 //-------------------------------------------- Constructeurs - destructeur
-GraphMaker::GraphMaker(const string& filename) :
-outputGraphFilename(filename)
-{
+GraphMaker::GraphMaker(const string& filename){
 
 }
 
@@ -42,8 +40,9 @@ GraphMaker::~GraphMaker(){
 }
 
 //--------------------------------------------------------------- Methodes
-void GraphMaker::setup(){
+void GraphMaker::setup(const string& filename){
   // just creates the file, if error occurs, well.. use stderr!
+  outputGraphFilename = filename;
   outfile.open(outputGraphFilename);
 
   if(!outfile.is_open()){
@@ -53,41 +52,39 @@ void GraphMaker::setup(){
 
 }
 
-void GraphMaker::generateGraphFile(){
+void GraphMaker::generateGraphFile(const unordered_map<string, unordered_map<string, int> >& graph_umap){
 
   //start
   outfile << "digraph {\n";
 
-  // auto to now gaf about the type cuz im lazy
-  const auto& graph_umap = logStats.getGraph(); // to change!
-
   for(const auto& pair: graph_umap){
-    const string& sourceNode = pair.first; // string
-    const auto& target_nodes = pair.second; // umap<int, string>
+    const string& targetNode = pair.first; // string (the one we go to)
+    const auto& source_nodes= pair.second; // umap<int, string> referres (from where we come from to go to target)
 
-    createNode(outfile, sourceNode);
+    createNode(outfile, targetNode);
 
     // go through the nodes in the umap
-    for(const auto& node: target_nodes){ //inverted
-      const auto& weight = node.first;
-      const auto& targetNode= node.second;
+    for(const auto& node: source_nodes){ //inverted
+
+      const auto& sourceNode= node.first; // from who we call from
+      const auto& weight = node.second;
 
       createLink(outfile, sourceNode, targetNode, weight);
     }
   }
 
-  //end
+  //end! yay
   outfile << "}\n";
 
-  cout << "Dot-file" << outputGraphFilename << "generated yo!." << endl;
+  cout << "Dot-file" << outputGraphFilename << "generated yo!" << endl;
 
   return;
 }
 
 inline void GraphMaker::createNode(ofstream& of, const string& nodeName){
-  of << nodeName << ";\n";
+  of << " \"" << nodeName << "\";\n";
 }
 
 inline void GraphMaker::createLink(ofstream& of, const string& fromNode, const string& toNode, const long int occurences){
-  of << fromNode << " -> " << toNode << "[label="<< occurences<<"];\n";
+  of << " \"" << fromNode << "\" -> \"" << toNode << "\" [label=\"" << occurences << "\"];\n";
 }
