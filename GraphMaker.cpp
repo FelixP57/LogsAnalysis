@@ -1,76 +1,90 @@
 /*************************************************************************
-                           GraphMaker  -  Générateur de graphe
-                             -------------------
-    début                : 2026-10-05
-    copyright            : (C) 2026 par Raphael GUTEVILLE,
-                                        Jules BRISARD,
-                                        Gerald CHAMBI RAMOS
-                                        Félix PIETRUCZANIS
+	       GraphMaker  -  Reads and parses an Apache Log
+		 -------------------
+    début                : 2026
+    copyright            : (C) 12-01-2026 par Félix PIETRUCZANIS,
+                                              Raphaël GUTEVILLE
+					      Jules BRISARD
+					      Gerald CHAMBI RAMOS
 *************************************************************************/
 
-//---------- Réalisation de la classe <GraphMaker> (fichier GraphMaker.cpp) ------------
+//---------- Réalisation de la classe <LogReader> (fichier LogReader.cpp) ------------
 
 //---------------------------------------------------------------- INCLUDE
 
-//-------------------------------------------------------- Include système
-using namespace std;
-#include <iostream>
-
-//------------------------------------------------------ Include personnel
 #include "GraphMaker.h"
+//-------------------------------------------------------- Include système
+#include <fstream>
+#include <iostream>
+#include <unordered_map>
+
+using namespace std;
 
 //------------------------------------------------------------- Constantes
 
 //----------------------------------------------------------------- PUBLIC
 
 //----------------------------------------------------- Méthodes publiques
-// type Xxx::Méthode ( liste des paramètres )
-// Algorithme :
-//
-//{
-//} //----- Fin de Méthode
-
-
-//------------------------------------------------- Surcharge d'opérateurs
-GraphMaker & GraphMaker::operator = ( const GraphMaker & unGraphMaker )
-// Algorithme :
-//
-{
-} //----- Fin de operator =
-
 
 //-------------------------------------------- Constructeurs - destructeur
-GraphMaker::GraphMaker ( const GraphMaker & unGraphMaker )
-// Algorithme :
-//
-{
-#ifdef MAP
-    cout << "Appel au constructeur de copie de <GraphMaker>" << endl;
-#endif
-} //----- Fin de GraphMaker (constructeur de copie)
+GraphMaker::GraphMaker(const string& filename){
 
+}
 
-GraphMaker::GraphMaker ( )
-// Algorithme :
-//
-{
-#ifdef MAP
-    cout << "Appel au constructeur de <GraphMaker>" << endl;
-#endif
-} //----- Fin de GraphMaker
+GraphMaker::~GraphMaker(){
 
+  if(outfile.is_open()){
+    outfile.close();
+  }
 
-GraphMaker::~GraphMaker ( )
-// Algorithme :
-//
-{
-#ifdef MAP
-    cout << "Appel au destructeur de <GraphMaker>" << endl;
-#endif
-} //----- Fin de ~GraphMaker
+}
 
+//--------------------------------------------------------------- Methodes
+void GraphMaker::setup(const string& filename){
+  // just creates the file, if error occurs, well.. use stderr!
+  outputGraphFilename = filename;
+  outfile.open(outputGraphFilename);
 
-//------------------------------------------------------------------ PRIVE
+  if(!outfile.is_open()){
+      // error whilst creating the file
+      cerr << "Error: Could not create the file " << outputGraphFilename << ".\n";
+  }
 
-//----------------------------------------------------- Méthodes protégées
+}
 
+void GraphMaker::generateGraphFile(const unordered_map<string, unordered_map<string, int> >& graph_umap){
+
+  //start
+  outfile << "digraph {\n";
+
+  for(const auto& pair: graph_umap){
+    const string& targetNode = pair.first; // string (the one we go to)
+    const auto& source_nodes= pair.second; // umap<int, string> referres (from where we come from to go to target)
+
+    createNode(outfile, targetNode);
+
+    // go through the nodes in the umap
+    for(const auto& node: source_nodes){ //inverted
+
+      const auto& sourceNode= node.first; // from who we call from
+      const auto& weight = node.second;
+
+      createLink(outfile, sourceNode, targetNode, weight);
+    }
+  }
+
+  //end! yay
+  outfile << "}\n";
+
+  cout << "Dot-file" << outputGraphFilename << "generated yo!" << endl;
+
+  return;
+}
+
+inline void GraphMaker::createNode(ofstream& of, const string& nodeName){
+  of << " \"" << nodeName << "\";\n";
+}
+
+inline void GraphMaker::createLink(ofstream& of, const string& fromNode, const string& toNode, const long int occurences){
+  of << " \"" << fromNode << "\" -> \"" << toNode << "\" [label=\"" << occurences << "\"];\n";
+}

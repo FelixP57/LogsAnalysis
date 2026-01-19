@@ -1,79 +1,74 @@
 /*************************************************************************
-                           GraphMaker  -  Générateur de graphe
-                             -------------------
-    début                : 2026-10-05
-    copyright            : (C) 2026 par Raphael GUTEVILLE,
-                                        Jules BRISARD,
-                                        Gerald CHAMBI RAMOS
-                                        Félix PIETRUCZANIS
+	       GraphMaker  -  Creates the output graph of an already analyzed Apache Log
+		 -------------------
+    début                : 2026
+    copyright            : (C) 12-01-2026 par Félix PIETRUCZANIS,
+                                              Raphaël GUTEVILLE
+                                              Jules BRISARD
+                                              Gerald CHAMBI RAMOS
 *************************************************************************/
 
 //---------- Interface de la classe <GraphMaker> (fichier GraphMaker.h) ----------------
-#if ! defined ( GRAPHMAKER_H )
+#ifndef GRAPHMAKER_H
 #define GRAPHMAKER_H
 
-//--------------------------------------------------- Interfaces utilisées
 
+//--------------------------------------------------- Interfaces utilisées
+// Include systeme
+#include <iostream>
+#include <fstream>
+#include <unordered_map>
+
+using namespace std;
+// Include user
 //------------------------------------------------------------- Constantes
 
 //------------------------------------------------------------------ Types
 
 //------------------------------------------------------------------------
-// Rôle de la classe <Xxx>
+// Rôle de la classe <GraphMaker>
 //
 //
 //------------------------------------------------------------------------
 
-class GraphMaker
-{
-//----------------------------------------------------------------- PUBLIC
+class GraphMaker{
 
-public:
-//----------------------------------------------------- Méthodes publiques
-    // type Méthode ( liste des paramètres );
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
+  public:
+  //----------------------------------------------------- Méthodes publiques
+      // type Méthode ( liste des paramètres );
+      // Mode d'emploi :
+      //
+      // Contrat :
+      //
+  //-------------------------------------------- Constructeurs - destructeur
+  GraphMaker();
 
+  ~GraphMaker();
 
-//------------------------------------------------- Surcharge d'opérateurs
-    GraphMaker & operator = ( const GraphMaker & unGraphMaker );
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
+  void generateGraphFile(const unordered_map<string, unordered_map<string, int>>& analyzed_umap);
 
+  /* Generates a GraphViz .dot file for the corresponding graph deducted from analyze
+   * Where each document (page) will apear under the form of a node et every 'link' indicates
+   * the number of ocurrences associated.
+   *
+   * Returns: none but outputs to stderr depending if the creation of the file was succesful or not.
+   */
+  void setup(const string& filename);
 
-//-------------------------------------------- Constructeurs - destructeur
-    GraphMaker ( const GraphMaker & unGraphMaker );
-    // Mode d'emploi (constructeur de copie) :
-    //
-    // Contrat :
-    //
+  //------------------------------------------------------------------ PRIVE
+  private:
+  //----------------------------------------------------- Méthodes protégées
 
-    GraphMaker ( );
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
+    inline void createNode(ofstream& of, const string& nodeName);
 
-    virtual ~GraphMaker ( );
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
+    inline void createLink(ofstream& of, const string& fromNode, const string& toNode, const long int occurences);
 
-//------------------------------------------------------------------ PRIVE
+  //----------------------------------------------------- Attributs protégés
 
-protected:
-//----------------------------------------------------- Méthodes protégées
-
-//----------------------------------------------------- Attributs protégés
+    string outputGraphFilename;
+    ofstream outfile;
 
 };
 
-//-------------------------------- Autres définitions dépendantes de <GraphMaker>
 
-#endif // GRAPHMAKER_H
-
+#endif // fin de GRAPHMAKER_H
