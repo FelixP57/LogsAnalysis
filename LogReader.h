@@ -39,32 +39,21 @@ public:
     // Mode d'emploi : Lis la prochaine ligne du fichier associé au logstream
     // et renvoie le LogEntry associe
     //
-    // Contrat :
-    //
-
-//------------------------------------------------- Surcharge d'opérateurs
-    LogReader & operator = ( const LogReader & unLogReader );
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
-
+    // Contrat : Le fichier doit être ouvert et valide
 
 //-------------------------------------------- Constructeurs - destructeur
     LogReader ( const LogReader & unLogReader );
-    // Mode d'emploi (constructeur de copie) :
+    // Mode d'emploi (constructeur de copie) : Renvoie juste un avertissement sur cout car copie inutile et dangereuse
     //
-    // Contrat :
-    //
+    // Contrat : Affiche un message d'avertissement à l'utilisateur
 
-    LogReader(std::string& file_path);
-    // Mode d'emploi :
+    LogReader(const std::string& file_path);
+    // Mode d'emploi : Crée un LogReader et ouvre le fichier spécifié par file_path
     //
-    // Contrat :
-    //
+    // Contrat : Le fichier doit exister et être accessible en lecture
 
     virtual ~LogReader ( );
-    // Mode d'emploi :
+    // Mode d'emploi : Ferme le fichier
     //
     // Contrat :
     //
