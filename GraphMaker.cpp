@@ -27,15 +27,10 @@ using namespace std;
 //----------------------------------------------------- Méthodes publiques
 
 //-------------------------------------------- Constructeurs - destructeur
-GraphMaker::GraphMaker(const LogStats& stats, const string& filename) :
-logStats(stats), outputGraphFilename(filename)
+GraphMaker::GraphMaker(const string& filename) :
+outputGraphFilename(filename)
 {
-  outfile.open(outputGraphFilename);
 
-  if(!outfile.is_open()){
-      // error whilst creating the file
-      cerr << "Error: Could not create the file " << outputGraphFilename << ".\n";
-    }
 }
 
 GraphMaker::~GraphMaker(){
@@ -43,11 +38,22 @@ GraphMaker::~GraphMaker(){
   if(outfile.is_open()){
     outfile.close();
   }
+
 }
 
 //--------------------------------------------------------------- Methodes
-void GraphMaker::generateGraphFile(){
+void GraphMaker::setup(){
+  // just creates the file, if error occurs, well.. use stderr!
+  outfile.open(outputGraphFilename);
 
+  if(!outfile.is_open()){
+      // error whilst creating the file
+      cerr << "Error: Could not create the file " << outputGraphFilename << ".\n";
+  }
+
+}
+
+void GraphMaker::generateGraphFile(){
 
   //start
   outfile << "digraph {\n";
@@ -55,16 +61,16 @@ void GraphMaker::generateGraphFile(){
   // auto to now gaf about the type cuz im lazy
   const auto& graph_umap = logStats.getGraph(); // to change!
 
-  for(auto& pair: graph_umap){
-    const string& sourceNode = pair.first;
-    const auto& target_nodes = pair.second;
+  for(const auto& pair: graph_umap){
+    const string& sourceNode = pair.first; // string
+    const auto& target_nodes = pair.second; // umap<int, string>
 
     createNode(outfile, sourceNode);
 
     // go through the nodes in the umap
-    for(const auto& node: target_nodes){
-      const string& targetNode = node.first;
-      long weight = node.second;
+    for(const auto& node: target_nodes){ //inverted
+      const auto& weight = node.first;
+      const auto& targetNode= node.second;
 
       createLink(outfile, sourceNode, targetNode, weight);
     }
@@ -73,7 +79,7 @@ void GraphMaker::generateGraphFile(){
   //end
   outfile << "}\n";
 
-  cout << "Dot-file" << outputGraphFilename << "generated." << endl;
+  cout << "Dot-file" << outputGraphFilename << "generated yo!." << endl;
 
   return;
 }

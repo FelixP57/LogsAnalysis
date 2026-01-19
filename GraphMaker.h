@@ -20,7 +20,6 @@
 
 using namespace std;
 // Include user
-#include "LogStats.h"
 //------------------------------------------------------------- Constantes
 
 //------------------------------------------------------------------ Types
@@ -41,7 +40,7 @@ class GraphMaker{
       // Contrat :
       //
   //-------------------------------------------- Constructeurs - destructeur
-  GraphMaker(const LogStats& stats, const string& filename);
+  GraphMaker(const string& filename);
 
   ~GraphMaker();
   /* Generates a GraphViz .dot file for the corresponding graph deducted from analyze
@@ -51,6 +50,9 @@ class GraphMaker{
    * Returns: bool depending if the creation of the file was succesful or not.
    */
   void generateGraphFile();
+
+  void setup();
+
   //------------------------------------------------------------------ PRIVE
   private:
   //----------------------------------------------------- Méthodes protégées
@@ -58,8 +60,9 @@ class GraphMaker{
     inline void createNode(ofstream& of, const string& nodeName);
 
     inline void createLink(ofstream& of, const string& fromNode, const string& toNode, const long int occurences);
+
   //----------------------------------------------------- Attributs protégés
-    const LogStats logStats;
+
     const string outputGraphFilename;
     ofstream outfile;
 
