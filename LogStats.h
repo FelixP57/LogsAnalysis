@@ -16,6 +16,7 @@
 #include <unordered_map>
 #include <map>
 #include "LogReader.h"
+#include "GraphMaker.h"
 
 //------------------------------------------------------------- Constantes
 

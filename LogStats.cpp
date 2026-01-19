@@ -18,6 +18,8 @@ using namespace std;
 
 //------------------------------------------------------ Include personnel
 #include "LogStats.h"
+#include "LogReader.h"
+#include "GraphMaker.h"
 
 //------------------------------------------------------------- Constantes
 
@@ -100,6 +102,10 @@ LogStats::LogStats ( )
 #ifdef MAP
     cout << "Appel au constructeur de <LogStats>" << endl;
 #endif
+    interactions = unordered_map<string, unordered_map<string, int>>();
+    hits = unordered_map<string, int>();
+    logs = LogReader();
+    grapher = GraphMaker();
 } //----- Fin de LogStats
 
 
