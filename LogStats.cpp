@@ -37,7 +37,7 @@ void LogStats::AnalyseLogs ( GraphMaker *grapher, bool exclude, int hour)
 {
     LogEntry log;
 
-    while (!(log = logs->readLine()).client_ip.empty()) {
+    while (!(log = logs->readLine(base_url)).client_ip.empty()) {
         // Flags
 	if (exclude)
 	{
@@ -48,7 +48,7 @@ void LogStats::AnalyseLogs ( GraphMaker *grapher, bool exclude, int hour)
 	}
 	if (hour != -1)
 	{
-	    if (log.hour < hour || log.hour > hour + 1)
+	    if (log.hour < hour || log.hour >= hour + 1)
 		{
 			continue;
 	    }

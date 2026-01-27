@@ -1,0 +1,10 @@
+digraph {
+ "/stages/FondInsa.jpg";
+ "http://intranet-if.insa-lyon.fr/stages/style_pfe.css" -> "/stages/FondInsa.jpg" [label="1"];
+ "/stages/InsaIF.ico";
+ "-" -> "/stages/InsaIF.ico" [label="1"];
+ "/stages/style_pfe.css";
+ "http://intranet-if.insa-lyon.fr/SiteWebIF/Intranet-etudiant.php" -> "/stages/style_pfe.css" [label="1"];
+ "/SiteWebIF/Intranet-etudiant.php";
+ "/" -> "/SiteWebIF/Intranet-etudiant.php" [label="3"];
+}

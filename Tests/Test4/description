@@ -1,1 +1,1 @@
-Test mal formé, sans fichier run
+Test pour vérifier que les symboles (?, #, ;) à la fin des urls sont bien supprimés avec le texte qui les suit.

@@ -1,1 +1,1 @@
-cat 
+../../analog -g graph.dot test5.log
