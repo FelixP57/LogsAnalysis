@@ -45,7 +45,7 @@ void LogStats::AnalyseLogs ( GraphMaker *grapher, bool exclude, int hour)
 	}
 	if (hour != -1)
 	{
-	    if (log.hour < hour*3600 || log.hour > (hour + 1)*3600)
+	    if (log.hour < hour || log.hour > hour + 1)
 		{
 			continue;
 	    }
