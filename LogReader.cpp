@@ -30,7 +30,7 @@ using namespace std;
 
 //----------------------------------------------------- Méthodes publiques
 
-LogEntry LogReader::readLine()
+LogEntry LogReader::readLine(string base_url)
 // Algorithme :
 // 1. Lecture de la ligne brute du fichier log
 // 2. Parsing de l'adresse IP et des champs vides
@@ -111,7 +111,6 @@ LogEntry LogReader::readLine()
     iss.ignore(); // Guillemet "
     getline(iss, log.referer, '"');
 
-    string base_url = "http://intranet-if.insa-lyon.fr";
     size_t pos_base_url = log.referer.find(base_url);
     if (pos_base_url != string::npos) {
 	log.referer = log.referer.substr(pos_base_url + base_url.length(), log.referer.length()-pos_base_url-base_url.length());
@@ -157,11 +156,8 @@ LogReader::LogReader(const string& file_path)
 
     // VERIFICATION INDISPENSABLE
     if (!logstream.is_open()) {
-        cerr << "ERREUR FATALE : Le fichier n'a pas pu être ouvert !" << endl;
-        cerr << "Chemin tenté : " << file_path << endl;
-        cerr << "Vérifiez que le dossier 'LogsAnalysis' existe bien là où vous lancez l'exécutable." << endl;
-    } else {
-        cout << "SUCCES : Fichier ouvert correctement." << endl;
+        cerr << "ERREUR : Le fichier " << file_path << " n'a pas pu être ouvert !" << endl;
+        cerr << "Vérifiez que le fichier existe bien là où vous lancez l'exécutable." << endl;
     }
 } //----- Fin du constructeur normal
 
@@ -179,3 +175,4 @@ LogReader::~LogReader ( )
 //------------------------------------------------------------------ PRIVE
 
 //----------------------------------------------------- Méthodes protégées
+

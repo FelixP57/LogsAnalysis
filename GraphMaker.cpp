@@ -72,8 +72,6 @@ void GraphMaker::GenerateGraphFile(const unordered_map<string, unordered_map<str
   //end! yay
   outfile << "}\n";
 
-  cout << "Dot-file" << outputGraphFilename << "generated yo!" << endl;
-
   return;
 }
 

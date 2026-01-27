@@ -1,1 +1,1 @@
-./exe
+../../analog -g graph.dot test7.log

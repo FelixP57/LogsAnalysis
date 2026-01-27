@@ -35,7 +35,7 @@ class LogReader
 
 public:
 //----------------------------------------------------- Méthodes publiques
-    LogEntry readLine();
+    LogEntry readLine(string base_url);
     // Mode d'emploi : Lis la prochaine ligne du fichier associé au logstream
     // et renvoie le LogEntry associe
     //

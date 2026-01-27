@@ -1,5 +1,5 @@
 main: analog.cpp LogReader.o LogStats.o GraphMaker.o
-	g++ -o test analog.cpp LogReader.o LogStats.o GraphMaker.o -std=c++11
+	g++ -o analog analog.cpp LogReader.o LogStats.o GraphMaker.o -std=c++11
 
 LogReader.o: LogReader.h LogEntry.h
 	g++ -c LogReader.cpp -std=c++11

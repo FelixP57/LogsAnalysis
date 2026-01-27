@@ -2,28 +2,20 @@
 #include <string>
 #include <vector>
 
-// Estas cabeceras representarían las clases que debes desarrollar 
-// según la sección "Conception" del TP.
 #include "LogStats.h"
 #include "LogReader.h"
 #include "GraphMaker.h"
 
 using namespace std;
 
-/**
- * Función principal para la herramienta 'analog'[cite: 50, 53].
- * Estructura de comando: ./analog [options] nomfichier.log
- */
 int main(int argc, char* argv[]) 
 {
-    // Variables para almacenar los parámetros de las opciones [cite: 52]
     string logFileName = "";
     string dotFileName = "";
-    bool excludeResources = false; // Opción -e [cite: 59, 60]
-    int selectedHour = -1;         // Opción -t [cite: 61, 62]
-    bool generateGraph = false;    // Opción -g [cite: 56, 57]
+    bool excludeResources = false; 
+    int selectedHour = -1;        
+    bool generateGraph = false;  
 
-    // 1. Tratamiento de los argumentos de la línea de comandos [cite: 52]
     if (argc < 2) {
         cerr << "Utilisation: " << argv[0] << " [-g nomfichier.dot] [-e] [-t heure] nomfichier.log" << endl;
         return 1;
@@ -33,30 +25,28 @@ int main(int argc, char* argv[])
         string arg = argv[i];
 
         if (arg == "-g" && i + 1 < argc) {
-            generateGraph = true;
-            dotFileName = argv[++i]; // El siguiente argumento es el archivo .dot [cite: 56]
+	    generateGraph = true;
+	    dotFileName = argv[++i]; // L'argument suivant est le nom du fichier .dot
         } else if (arg == "-e") {
-            excludeResources = true; // Excluir imágenes, css, js [cite: 60]
+            excludeResources = true; // Exclure les fichiers images, css et javascript
         } else if (arg == "-t" && i + 1 < argc) {
             try {
-                selectedHour = stoi(argv[++i]); // Intervalo [heure, heure+1[ [cite: 62]
-            } catch (...) {
+                selectedHour = stoi(argv[++i]); // Intervalle [heure, heure+1[
+	    } catch (...) {
                 cerr << "Erreur: L'heure doit être un nombre entier." << endl;
                 return 1;
             }
         } else {
-            // Se asume que el último argumento sin flag es el archivo de log [cite: 53]
+            // Le dernier argument est le nom du fichier log
             logFileName = arg;
         }
     }
 
-    // 2. Validación de archivo de entrada
     if (logFileName.empty()) {
         cerr << "Erreur: Pas d'archive de logs spécifiée." << endl;
         return 1;
     }
 
-    // 3. Ejecución de la lógica mediante la clase LogReader [cite: 72, 82]
     LogReader reader(logFileName);
     LogStats analyzer(&reader);
 
