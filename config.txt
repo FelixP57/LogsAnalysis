@@ -1,0 +1,3 @@
+base_url: https://intranetif.insa-lyon.fr
+file_ext: "png", "jpg", "jpeg", "gif", "svg", "webp", "ico", "bmp", "tiff", "tif", "avif", "heic", "heif", "svgz", "ai", "psd", "eps", "css", "js"
+

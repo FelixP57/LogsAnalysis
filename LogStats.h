@@ -15,6 +15,7 @@
 //--------------------------------------------------- Interfaces utilisées
 #include <unordered_map>
 #include <map>
+#include <set>
 #include "LogReader.h"
 #include "GraphMaker.h"
 
@@ -65,11 +66,16 @@ public:
 
 protected:
 //----------------------------------------------------- Méthodes protégées
+    void loadConfig ();
 
 //----------------------------------------------------- Attributs protégés
     unordered_map<string, unordered_map<string, int>> interactions;
     unordered_map<string, int> hits;
     LogReader *logs;
+
+    string base_url;
+    set<string> file_extensions;
+    
 };
 
 //-------------------------------- Autres définitions dépendantes de <LogStats>

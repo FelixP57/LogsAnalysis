@@ -18,6 +18,7 @@ using namespace std;
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <regex>
 
 //------------------------------------------------------ Include personnel
 #include "LogReader.h"
@@ -116,17 +117,13 @@ LogEntry LogReader::readLine()
 	log.referer = log.referer.substr(pos_base_url + base_url.length(), log.referer.length()-pos_base_url-base_url.length());
     }
 
-    size_t pos_symbol = log.referer.find('?');
-    if (pos_base_url != string::npos) {
-	log.referer = log.referer.substr(0, pos_symbol);
+    regex symbols_re("(.*)[?;#]");
+    smatch match;
+    if (regex_search(log.referer, match, symbols_re) && match.size() > 1) {
+	log.referer = match.str(1);
     }
-    pos_symbol = log.referer.find(';');
-    if (pos_base_url != string::npos) {
-	log.referer = log.referer.substr(0, pos_symbol);
-    }
-    pos_symbol = log.referer.find('#');
-    if (pos_base_url != string::npos) {
-	log.referer = log.referer.substr(0, pos_symbol);
+    if (regex_search(log.url, match, symbols_re) && match.size() > 1) {
+	log.url = match.str(1);
     }
 
     // 6. User Agent : "Mozilla/5.0 ..."

@@ -16,6 +16,9 @@
 using namespace std;
 #include <iostream>
 #include <map>
+#include <string>
+#include <set>
+#include <regex>
 
 //------------------------------------------------------ Include personnel
 #include "LogStats.h"
@@ -38,7 +41,7 @@ void LogStats::AnalyseLogs ( GraphMaker *grapher, bool exclude, int hour)
         // Flags
 	if (exclude)
 	{
-	    if (log.document_type != "html")
+	    if (file_extensions.find(log.document_type) != file_extensions.end())
 		{
 			continue;
 	    }
@@ -49,7 +52,7 @@ void LogStats::AnalyseLogs ( GraphMaker *grapher, bool exclude, int hour)
 		{
 			continue;
 	    }
-	}
+}
 
 	if (interactions.find(log.url) == interactions.end())
 	{
@@ -98,6 +101,37 @@ multimap<int, string> LogStats::GetDocumentByHit ( )
     return docHits;
 } //----- Fin de Méthode
 
+void LogStats::loadConfig ()
+// Algorithme :
+//
+{
+    ifstream config_file;
+    config_file.open("config.txt");
+    string line;
+    
+    while (getline(config_file, line))
+    {
+	regex url_re("base_url(\\s*):(\\s*)(\\S+)");
+	smatch match;
+	if (regex_search(line, match, url_re) && match.size() > 1) {
+	    base_url = match.str(3);
+	}
+
+	size_t ext_pos = line.find("file_ext");
+	if (ext_pos != string::npos) {
+	    regex ext_re("\"(\\S+)\"");
+	    sregex_iterator next(line.begin(), line.end(), ext_re);
+	    sregex_iterator end;
+	    while (next != end) {
+		smatch match = *next;
+		file_extensions.insert(match.str(1));
+		next++;
+	    }
+	}
+    }
+
+    config_file.close();
+}
 
 //-------------------------------------------- Constructeurs - destructeur
 LogStats::LogStats ( LogReader *reader )
@@ -110,6 +144,9 @@ LogStats::LogStats ( LogReader *reader )
     interactions = unordered_map<string, unordered_map<string, int>>();
     hits = unordered_map<string, int>();
     logs = reader;
+    base_url = "";
+    file_extensions = set<string>();
+    loadConfig();
 } //----- Fin de LogStats
 
 
