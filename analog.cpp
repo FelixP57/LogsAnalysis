@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
 
     // 1. Tratamiento de los argumentos de la línea de comandos [cite: 52]
     if (argc < 2) {
-        cerr << "Uso: " << argv[0] << " [-g nomfichier.dot] [-e] [-t heure] nomfichier.log" << endl;
+        cerr << "Utilisation: " << argv[0] << " [-g nomfichier.dot] [-e] [-t heure] nomfichier.log" << endl;
         return 1;
     }
 
@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
             try {
                 selectedHour = stoi(argv[++i]); // Intervalo [heure, heure+1[ [cite: 62]
             } catch (...) {
-                cerr << "Error: La hora debe ser un número entero." << endl;
+                cerr << "Erreur: L'heure doit être un nombre entier." << endl;
                 return 1;
             }
         } else {
@@ -52,7 +52,7 @@ int main(int argc, char* argv[])
 
     // 2. Validación de archivo de entrada
     if (logFileName.empty()) {
-        cerr << "Error: No se especificó un archivo de log." << endl;
+        cerr << "Erreur: Pas d'archive de logs spécifiée." << endl;
         return 1;
     }
 
@@ -60,9 +60,13 @@ int main(int argc, char* argv[])
     LogReader reader(logFileName);
     LogStats analyzer(&reader);
 
-    GraphMaker grapher(dotFileName);
+    if (generateGraph) {
+	GraphMaker grapher(dotFileName);
+	analyzer.AnalyseLogs(&grapher, excludeResources, selectedHour);
+    } else {
+	analyzer.AnalyseLogs(nullptr, excludeResources, selectedHour);
+    }
 
-    analyzer.AnalyseLogs(&grapher, excludeResources, selectedHour);
 
     return 0;
 }
