@@ -8,6 +8,10 @@
 
 using namespace std;
 
+/**
+ * analog - Outil d'analyse de logs Apache
+ * Usage : ./analog [-g fichier.dot] [-e] [-t heure] nomfichier.log
+ */
 int main(int argc, char* argv[]) 
 {
     string logFileName = "";
@@ -31,9 +35,13 @@ int main(int argc, char* argv[])
             excludeResources = true; // Exclure les fichiers images, css et javascript
         } else if (arg == "-t" && i + 1 < argc) {
             try {
-                selectedHour = stoi(argv[++i]); // Intervalle [heure, heure+1[
-	    } catch (...) {
-                cerr << "Erreur: L'heure doit être un nombre entier." << endl;
+                selectedHour = stoi(argv[++i]);
+                if (selectedHour < 0 || selectedHour > 23) {
+                    cerr << "Erreur : L'heure doit être comprise entre 0 et 23." << endl;
+                    return 1;
+                }
+            } catch (...) {
+                cerr << "Erreur : L'argument de -t doit être un entier." << endl;
                 return 1;
             }
         } else {
@@ -43,7 +51,7 @@ int main(int argc, char* argv[])
     }
 
     if (logFileName.empty()) {
-        cerr << "Erreur: Pas d'archive de logs spécifiée." << endl;
+        cerr << "Erreur : Aucun fichier de log spécifié." << endl;
         return 1;
     }
 
