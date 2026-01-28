@@ -1,0 +1,1 @@
+../../analog -e -t 10 -g g.dot test29.log

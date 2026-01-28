@@ -13,12 +13,12 @@
 //---------------------------------------------------------------- INCLUDE
 
 //-------------------------------------------------------- Include système
-using namespace std;
 #include <iostream>
 #include <string>
 #include <fstream>
 #include <sstream>
 #include <regex>
+using namespace std;
 
 //------------------------------------------------------ Include personnel
 #include "LogReader.h"
@@ -50,7 +50,6 @@ LogEntry LogReader::readLine(string base_url)
     istringstream iss(line); 
     
     string dump; // Variable poubelle pour stocker les tirets "-"
-    char car_ignore; // Pour consommer les crochets ou guillemets
 
     // 1. Lecture de l'IP et des champs inutiles (- -)
     iss >> log.client_ip >> dump >> dump;
@@ -133,6 +132,10 @@ LogEntry LogReader::readLine(string base_url)
     return log;
 } //----- Fin de readLine
 
+bool LogReader::isOpen()
+{
+    return logstream.is_open();
+}
 
 //-------------------------------------------- Constructeurs - destructeur
 
@@ -140,8 +143,7 @@ LogReader::LogReader ( const LogReader & unLogReader )
 // Mode d'emploi : Constructeur de copie
 // Algorithme : Affiche un message d'avertissement (copie dangereuse et inutile)
 {
-    cout<<"ATTENTION: Appel du constructeur de copie de LogReader, mais copie dangereuse";
-
+    cout << "ATTENTION: Appel du constructeur de copie de LogReader, mais copie dangereuse" << endl;
 } //----- Fin du constructeur de copie
 
 

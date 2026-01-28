@@ -1,1 +1,1 @@
-../../analog -t dix test17.log
+../../analog -e test.log

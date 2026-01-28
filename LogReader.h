@@ -41,6 +41,8 @@ public:
     //
     // Contrat : Le fichier doit être ouvert et valide
 
+    bool isOpen();
+
 //-------------------------------------------- Constructeurs - destructeur
     LogReader ( const LogReader & unLogReader );
     // Mode d'emploi (constructeur de copie) : Renvoie juste un avertissement sur cout car copie inutile et dangereuse

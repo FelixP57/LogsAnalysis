@@ -1,17 +1,12 @@
 #include <iostream>
 #include <string>
 #include <vector>
-
 #include "LogStats.h"
 #include "LogReader.h"
 #include "GraphMaker.h"
 
 using namespace std;
 
-/**
- * analog - Outil d'analyse de logs Apache
- * Usage : ./analog [-g fichier.dot] [-e] [-t heure] nomfichier.log
- */
 int main(int argc, char* argv[]) 
 {
     string logFileName = "";
@@ -28,24 +23,38 @@ int main(int argc, char* argv[])
     for (int i = 1; i < argc; ++i) {
         string arg = argv[i];
 
-        if (arg == "-g" && i + 1 < argc) {
-	    generateGraph = true;
-	    dotFileName = argv[++i]; // L'argument suivant est le nom du fichier .dot
-        } else if (arg == "-e") {
-            excludeResources = true; // Exclure les fichiers images, css et javascript
-        } else if (arg == "-t" && i + 1 < argc) {
-            try {
-                selectedHour = stoi(argv[++i]);
-                if (selectedHour < 0 || selectedHour > 23) {
-                    cerr << "Erreur : L'heure doit être comprise entre 0 et 23." << endl;
+        if (arg == "-g") {
+            if (i + 1 < argc) {
+                generateGraph = true;
+                string nomFichier = argv[i + 1];
+                if (nomFichier[0] == '-' || nomFichier.length() < 4 || nomFichier.substr(nomFichier.length() - 4) != ".dot"){
+                    cerr << "Erreur : L'option -g nécessite un nom de fichier .dot" << endl;
                     return 1;
                 }
-            } catch (...) {
-                cerr << "Erreur : L'argument de -t doit être un entier." << endl;
+                dotFileName = argv[++i];
+            } else {
+                cerr << "Erreur : L'option -g nécessite un nom de fichier .dot" << endl;
+                return 1;
+            }
+        } else if (arg == "-e") {
+            excludeResources = true;
+        } else if (arg == "-t") {
+            if (i + 1 < argc) {
+                try {
+                    selectedHour = stoi(argv[++i]);
+                    if (selectedHour < 0 || selectedHour > 23) {
+                        cerr << "Erreur : L'heure doit être comprise entre 0 et 23." << endl;
+                        return 1;
+                    }
+                } catch (...) {
+                    cerr << "Erreur : L'argument de -t doit être un entier." << endl;
+                    return 1;
+                }
+            } else {
+                cerr << "Erreur : L'option -t nécessite une heure." << endl;
                 return 1;
             }
         } else {
-            // Le dernier argument est le nom du fichier log
             logFileName = arg;
         }
     }
@@ -56,15 +65,19 @@ int main(int argc, char* argv[])
     }
 
     LogReader reader(logFileName);
+    // Vérification de l'ouverture du fichier avant de continuer
+    if (!reader.isOpen()) return 1;
+
     LogStats analyzer(&reader);
+    GraphMaker* grapher = nullptr;
 
     if (generateGraph) {
-	GraphMaker grapher(dotFileName);
-	analyzer.AnalyseLogs(&grapher, excludeResources, selectedHour);
-    } else {
-	analyzer.AnalyseLogs(nullptr, excludeResources, selectedHour);
+        grapher = new GraphMaker(dotFileName);
     }
 
+    analyzer.AnalyseLogs(grapher, excludeResources, selectedHour);
+
+    if (grapher) delete grapher;
 
     return 0;
 }

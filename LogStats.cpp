@@ -13,12 +13,12 @@
 //---------------------------------------------------------------- INCLUDE
 
 //-------------------------------------------------------- Include système
-using namespace std;
 #include <iostream>
 #include <map>
 #include <string>
 #include <set>
 #include <regex>
+using namespace std;
 
 //------------------------------------------------------ Include personnel
 #include "LogStats.h"
@@ -37,6 +37,11 @@ void LogStats::AnalyseLogs ( GraphMaker *grapher, bool exclude, int hour)
 {
     LogEntry log;
 
+	if (hour != -1) {
+        cout << "Attention : seulement les hits entre " << hour << "h et " << (hour + 1) % 24 
+             << "h sont pris en compte." << endl;
+    }
+
     while (!(log = logs->readLine(base_url)).client_ip.empty()) {
         // Flags
 	if (exclude)
@@ -52,7 +57,7 @@ void LogStats::AnalyseLogs ( GraphMaker *grapher, bool exclude, int hour)
 		{
 			continue;
 	    }
-}
+	}
 
 	if (interactions.find(log.url) == interactions.end())
 	{
@@ -76,17 +81,25 @@ void LogStats::AnalyseLogs ( GraphMaker *grapher, bool exclude, int hour)
 	hits[log.url] += 1;
     }
 
-    if (grapher != nullptr)
-    {
-	grapher->GenerateGraphFile(interactions);
+	if (hits.empty()) {
+        cout << "Aucun résultat trouvé pour les critères demandés." << endl;
+        return;
     }
+
+	cout << "Classement des 10 documents les plus consultés :" << endl;
 
     multimap<int, string> stats = GetDocumentByHit();
     int documentCount = 0;
     for (multimap<int, string>::reverse_iterator itr = stats.rbegin(); itr != stats.rend() && documentCount < 10; ++itr)
     {
-	cout << itr->second << " (" << itr->first << " hits)" << endl;
-	++documentCount;
+		cout << itr->second << " (" << itr->first << " hits)" << endl;
+		++documentCount;
+    }
+
+	if (grapher != nullptr)
+    {
+		grapher->GenerateGraphFile(interactions);
+		cout << "Fichier .dot généré avec succès." << endl;
     }
 } //----- Fin de Méthode
 
@@ -95,7 +108,7 @@ multimap<int, string> LogStats::GetDocumentByHit ( )
 //
 {
     multimap<int, string> docHits;
-    for (const pair<string, int> & pair : hits) {
+    for (const pair<const string, int> & pair : hits) {
         docHits.insert(make_pair(pair.second, pair.first));
     }
     return docHits;

@@ -4,7 +4,7 @@ Pour configurer notre analyseur de logs, il faut modifier le fichier config.txt.
 - les extensions des fichiers non pris en compte avec la commande -e
 
 # Utilisation
-Le programme peut-être utilisé en exécutant la commande make puis la commande ./analysis
+Le programme peut-être utilisé en exécutant la commande make puis la commande ./analog
 Les différentes options sont:
 - -g filename.dot pour générer un graph des hits dans le fichier filename.dot
 - -e pour enlever les fichiers image, script et style

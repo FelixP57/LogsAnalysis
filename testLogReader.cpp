@@ -23,7 +23,7 @@ int main() {
     
     // On teste sur les 3 premières lignes
     for(int i = 0; i < 3; ++i) {
-        LogEntry entry = reader.readLine();
+        LogEntry entry = reader.readLine("");
         if (!entry.client_ip.empty()) {
             cout << "\nLECTURE DE LA LIGNE " << i+1 << " :" << endl;
             afficherLog(entry);

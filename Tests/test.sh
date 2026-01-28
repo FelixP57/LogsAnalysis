@@ -23,7 +23,7 @@ if [ -r "description" ]
 then 
   echo "-----------------------------------------------------------"
   echo "Description :"
-  fold description -w 60 -s
+  fold -w 60 -s description
   echo "-----------------------------------------------------------"
 fi
 
