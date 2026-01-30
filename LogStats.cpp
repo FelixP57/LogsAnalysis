@@ -42,6 +42,10 @@ void LogStats::AnalyseLogs ( GraphMaker *grapher, bool exclude, int hour)
              << "h sont pris en compte." << endl;
     }
 
+	if (exclude) {
+		cout << "Les fichier images, CSS et JS seront exclus de l'analyse." << endl;
+	}
+
     while (!(log = logs->readLine(base_url)).client_ip.empty()) {
         // Flags
 	if (exclude)
@@ -132,7 +136,7 @@ void LogStats::loadConfig ()
 
 	size_t ext_pos = line.find("file_ext");
 	if (ext_pos != string::npos) {
-	    regex ext_re("\"(\\S+)\"");
+		regex ext_re("\"([a-zA-Z0-9]+)\"");
 	    sregex_iterator next(line.begin(), line.end(), ext_re);
 	    sregex_iterator end;
 	    while (next != end) {

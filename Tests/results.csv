@@ -1,5 +1,13 @@
 Test ID;Return code validation;Out result;StdErr result;File creation result;Global result
-Test1;2;1;2;2;1
+Test01;2;1;2;2;1
+Test02;2;0;2;2;0
+Test03;2;1;2;2;1
+Test04;2;0;2;2;0
+Test05;2;0;2;0;0
+Test06;2;0;2;0;0
+Test07;2;0;2;0;0
+Test08;2;0;2;0;0
+Test09;2;0;2;2;0
 Test10;2;1;2;2;1
 Test11;2;0;2;2;0
 Test12;2;1;0;2;0
@@ -7,10 +15,9 @@ Test13;2;1;2;2;1
 Test14;2;0;0;2;0
 Test15;2;0;0;2;0
 Test16;2;0;2;2;0
-Test17;2;1;0;2;0
+Test17;2;0;2;2;0
 Test18;2;1;2;2;1
 Test19;2;1;2;2;1
-Test2;2;0;2;2;0
 Test20;2;1;2;2;1
 Test21;2;1;2;2;1
 Test22;2;1;2;2;1
@@ -19,12 +26,5 @@ Test24;2;1;2;2;1
 Test25;2;1;2;2;1
 Test26;2;1;2;2;1
 Test27;2;1;2;2;1
-Test28;2;0;2;2;0
-Test29;2;0;2;2;0
-Test3;2;0;2;2;0
-Test4;2;0;2;2;0
-Test5;2;0;2;0;0
-Test6;2;0;2;0;0
-Test7;2;0;2;0;0
-Test8;2;0;2;0;0
-Test9;2;0;2;2;0
+Test28;2;1;2;2;1
+Test29;2;1;2;2;1
