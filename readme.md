@@ -39,3 +39,26 @@ Pour nettoyer les fichiers objets et l'exécutable :
 ```bash
 make clean
 ```
+
+## Génération du graphe à partir du fichier .dot avec Graphviz
+
+Une fois que votre fichier `.dot` est prêt, la transformation en image se fait depuis votre terminal. C'est l'outil `dot` qui se charge de calculer la disposition des nœuds et de dessiner les flèches pour vous.
+
+Utilisez la commande suivante dans votre terminal :
+
+```bash
+dot -Tpng mon_graphe.dot -o graphe.png
+
+```
+
+### Détails de la commande :
+
+* **`-Tpng`** : Définit le format de sortie. Ici, nous générons un fichier **PNG**, mais vous pourriez utiliser `-Tsvg` ou `-Tpdf` selon vos besoins.
+* **`mon_graphe.dot`** : C'est votre fichier source, celui qui contient la description textuelle de votre graphe.
+* **`-o graphe.png`** : L'option `-o` (pour *output*) spécifie le nom du fichier image qui sera créé.
+
+> Si votre graphe est très grand, essayez le format **SVG** (`-Tsvg`). Contrairement au PNG, vous pourrez zoomer sans perte de qualité.
+
+### Voici un aperçu du résultat :
+[![Image du graphe qui peut être généré avec l'option -g](out.png)](out.png)
+
