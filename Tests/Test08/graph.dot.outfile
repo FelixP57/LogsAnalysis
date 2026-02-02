@@ -1,10 +1,8 @@
 digraph {
- "/stages/FondInsa.jpg";
- "http://intranet-if.insa-lyon.fr/stages/style_pfe.css" -> "/stages/FondInsa.jpg" [label="1"];
- "/stages/InsaIF.ico";
- "-" -> "/stages/InsaIF.ico" [label="1"];
- "/stages/style_pfe.css";
- "http://intranet-if.insa-lyon.fr/SiteWebIF/Intranet-etudiant.php" -> "/stages/style_pfe.css" [label="1"];
  "/SiteWebIF/Intranet-etudiant.php";
- "/" -> "/SiteWebIF/Intranet-etudiant.php" [label="3"];
+ "/" -> "/SiteWebIF/Intranet-etudiant.php" [label="2"];
+ "/temps/style_emploi_du_temps.css";
+ "http://intranet-if.insa-lyon.fr/temps/" -> "/temps/style_emploi_du_temps.css" [label="3"];
+ "/temps/";
+ "http://www.google.fr/url" -> "/temps/" [label="1"];
 }
