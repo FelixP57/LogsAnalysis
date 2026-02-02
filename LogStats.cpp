@@ -43,7 +43,7 @@ void LogStats::AnalyseLogs ( GraphMaker *grapher, bool exclude, int hour)
     }
 
 	if (exclude) {
-		cout << "Les fichier images, CSS et JS seront exclus de l'analyse." << endl;
+		cout << "Les fichiers images, CSS et JS seront exclus de l'analyse." << endl;
 	}
 
     while (!(log = logs->readLine(base_url)).client_ip.empty()) {
