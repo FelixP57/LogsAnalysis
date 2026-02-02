@@ -25,8 +25,9 @@ using namespace std;
 
 //------------------------------------------------------------------------
 // Rôle de la classe <LogReader>
-//
-//
+//    Cette classe est responsable de l'accès bas niveau au fichier de log.
+//    Elle gère l'ouverture du flux de lecture et fournit une méthode pour
+//    extraire et parser chaque ligne sous forme d'objet LogEntry.
 //------------------------------------------------------------------------
 
 class LogReader

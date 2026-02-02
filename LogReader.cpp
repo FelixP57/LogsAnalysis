@@ -33,21 +33,23 @@ using namespace std;
 
 LogEntry LogReader::readLine(string base_url)
 // Algorithme :
-// 1. Lecture de la ligne brute du fichier log
-// 2. Parsing de l'adresse IP et des champs vides
-// 3. Extraction de la date et l'heure entre crochets
-// 4. Extraction de la requête HTTP (action, URL, protocole)
-// 5. Récupération du code de retour et de la taille de la réponse
-// 6. Extraction du referer et du user agent entre guillemets
-// Retour : Un objet LogEntry complètement rempli
+// 1. Lecture de la ligne via getline et encapsulation dans un istringstream.
+// 2. Extraction séquentielle de l'IP et de la date (via délimiteurs '[' / ']').
+// 3. Extraction de la requête HTTP complète entre guillemets.
+// 4. Nettoyage de l'URL via Regex pour ignorer les paramètres après '?' ou ';'.
+// 5. Identification du type de document par extraction de l'extension.
+// 6. Extraction du Referer et nettoyage de l'URL locale si base_url est trouvée.
+// 7. Retour de la structure LogEntry complétée.
 {
     string line;
     LogEntry log;
     log.client_ip = "";
 
-    while (getline(logstream, line)) {
+    while (getline(logstream, line))
+    {
         // Si la ligne n'est pas vide, on la traite
-        if (!line.empty()) {
+        if (!line.empty())
+        {
             istringstream iss(line);
             string dump, full_date_time, full_request;
 
@@ -64,7 +66,8 @@ LogEntry LogReader::readLine(string base_url)
             // On peut redécouper full_date_time maintenant
             // Le format est "date:time". On cherche le ':'
             size_t pos_deux_points = full_date_time.find(':');
-            if (pos_deux_points != string::npos) {
+            if (pos_deux_points != string::npos)
+            {
                 log.date = full_date_time.substr(0, pos_deux_points);
                 log.time = full_date_time.substr(pos_deux_points + 1);
             }
@@ -92,9 +95,11 @@ LogEntry LogReader::readLine(string base_url)
 
             size_t pos_point = log.url.find_last_of('.');
             log.document_type = "";
-            if (pos_point != string::npos) {
+            if (pos_point != string::npos)
+            {
                 log.document_type = log.url.substr(pos_point + 1);
-                for (char & c : log.document_type) {
+                for (char & c : log.document_type)
+                {
                     c = (char)tolower(c);
                 }
             }
@@ -107,9 +112,12 @@ LogEntry LogReader::readLine(string base_url)
             // Attention : la taille peut être un tiret "-" si 0 octet
             string size_str;
             iss >> size_str;
-            if (size_str == "-") {
+            if (size_str == "-")
+            {
                 log.size = 0;
-            } else {
+            }
+            else
+            {
                 log.size = stoi(size_str);
             }
 
@@ -119,12 +127,14 @@ LogEntry LogReader::readLine(string base_url)
             getline(iss, log.referer, '"');
 
             size_t pos_base_url = log.referer.find(base_url);
-            if (pos_base_url != string::npos) {
-            log.referer = log.referer.substr(pos_base_url + base_url.length(), log.referer.length()-pos_base_url-base_url.length());
+            if (pos_base_url != string::npos)
+            {
+                log.referer = log.referer.substr(pos_base_url + base_url.length(), log.referer.length()-pos_base_url-base_url.length());
             }
 
-            if (regex_search(log.referer, match, symbols_re) && match.size() > 1) {
-            log.referer = match.str(1);
+            if (regex_search(log.referer, match, symbols_re) && match.size() > 1)
+            {
+                log.referer = match.str(1);
             }
 
 
@@ -163,8 +173,9 @@ LogReader::LogReader(const string& file_path)
 {
     logstream.open(file_path.c_str());
 
-    // VERIFICATION INDISPENSABLE
-    if (!logstream.is_open()) {
+    // VERIFICATION
+    if (!logstream.is_open())
+    {
         cerr << "ERREUR : Le fichier " << file_path << " n'a pas pu être ouvert !" << endl;
         cerr << "Vérifiez que le fichier existe bien là où vous lancez l'exécutable." << endl;
     }

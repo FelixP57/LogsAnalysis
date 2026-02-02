@@ -5,7 +5,12 @@
 
 using namespace std;
 
-struct LogEntry{
+// Rôle de la struct <LogEntry>
+//    Cette structure encapsule les données extraites d'une ligne de log Apache.
+//    Elle est utilisée par LogReader pour représenter chaque entrée de log.
+
+struct LogEntry
+{
     string client_ip;
     string date;
     string time; //Contient time + fuseau horaire

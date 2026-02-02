@@ -25,8 +25,10 @@
 
 //------------------------------------------------------------------------
 // Rôle de la classe <LogStats>
-//
-//
+//    Classe centrale de l'analyse. Elle stocke les statistiques (hits) 
+//    et les relations (interactions) dans des structures de données (STL).
+//    Elle applique les filtres (horaires, extensions) et orchestre 
+//    l'analyse via le LogReader et la génération via GraphMaker.
 //------------------------------------------------------------------------
 
 class LogStats

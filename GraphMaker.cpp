@@ -26,41 +26,21 @@ using namespace std;
 
 //----------------------------------------------------- Méthodes publiques
 
-//-------------------------------------------- Constructeurs - destructeur
-GraphMaker::GraphMaker( const string& filename ){
-  // just creates the file, if error occurs, well.. use stderr!
-  outputGraphFilename = filename;
-  outfile.open(outputGraphFilename);
-
-  if(!outfile.is_open()){
-      // error whilst creating the file
-      cerr << "Error: Could not create the file " << outputGraphFilename << ".\n";
-  }
-
-}
-
-GraphMaker::~GraphMaker(){
-
-  if(outfile.is_open()){
-    outfile.close();
-  }
-
-}
-
-//--------------------------------------------------------------- Methodes
-void GraphMaker::GenerateGraphFile(const unordered_map<string, unordered_map<string, int> >& graph_umap){
-
+void GraphMaker::GenerateGraphFile(const unordered_map<string, unordered_map<string, int> >& graph_umap)
+{
   //start
   outfile << "digraph {\n";
 
-  for(const auto& pair: graph_umap){
+  for(const auto& pair: graph_umap)
+  {
     const string& targetNode = pair.first; // string (the one we go to)
     const auto& source_nodes= pair.second; // umap<int, string> referres (from where we come from to go to target)
 
     createNode(outfile, targetNode);
 
     // go through the nodes in the umap
-    for(const auto& node: source_nodes){ //inverted
+    for(const auto& node: source_nodes)
+    { //inverted
 
       const auto& sourceNode= node.first; // from who we call from
       const auto& weight = node.second;
@@ -75,10 +55,38 @@ void GraphMaker::GenerateGraphFile(const unordered_map<string, unordered_map<str
   return;
 }
 
-inline void GraphMaker::createNode(ofstream& of, const string& nodeName){
+//-------------------------------------------- Constructeurs - destructeur
+GraphMaker::GraphMaker( const string& filename )
+{
+  // just creates the file, if error occurs, well.. use stderr!
+  outputGraphFilename = filename;
+  outfile.open(outputGraphFilename);
+
+  if(!outfile.is_open())
+  {
+    // error whilst creating the file
+    cerr << "Error: Could not create the file " << outputGraphFilename << ".\n";
+  }
+
+}
+
+GraphMaker::~GraphMaker()
+{
+  if(outfile.is_open())
+  {
+    outfile.close();
+  }
+
+}
+
+//--------------------------------------------------------------- Methodes protégées
+
+inline void GraphMaker::createNode(ofstream& of, const string& nodeName)
+{
   of << " \"" << nodeName << "\";\n";
 }
 
-inline void GraphMaker::createLink(ofstream& of, const string& fromNode, const string& toNode, const long int occurences){
+inline void GraphMaker::createLink(ofstream& of, const string& fromNode, const string& toNode, const long int occurences)
+{
   of << " \"" << fromNode << "\" -> \"" << toNode << "\" [label=\"" << occurences << "\"];\n";
 }

@@ -33,59 +33,69 @@ using namespace std;
 //----------------------------------------------------- Méthodes publiques
 void LogStats::AnalyseLogs ( GraphMaker *grapher, bool exclude, int hour)
 // Algorithme :
-//
+// 1. Boucle de lecture tant que LogReader renvoie une entrée valide.
+// 2. Pour chaque entrée, vérification des critères d'exclusion (-e)
+//    via l'ensemble 'file_extensions' chargé depuis la config.
+// 3. Vérification du critère horaire (-t).
+// 4. Si valide : mise à jour de la map 'hits' pour le document.
+// 5. Mise à jour de la map 'interactions' (referer vers document).
+// 6. En fin de lecture, calcul du Top 10 et appel optionnel au grapher.
 {
     LogEntry log;
 
-	if (hour != -1) {
+	if (hour != -1)
+	{
         cout << "Attention : seulement les hits entre " << hour << "h et " << (hour + 1) % 24 
              << "h sont pris en compte." << endl;
     }
 
-	if (exclude) {
+	if (exclude)
+	{
 		cout << "Les fichiers images, CSS et JS seront exclus de l'analyse." << endl;
 	}
 
-    while (!(log = logs->readLine(base_url)).client_ip.empty()) {
-        // Flags
-	if (exclude)
+    while (!(log = logs->readLine(base_url)).client_ip.empty())
 	{
-	    if (file_extensions.find(log.document_type) != file_extensions.end())
+		// Flags
+		if (exclude)
 		{
-			continue;
-	    }
-	}
-	if (hour != -1)
-	{
-	    if (log.hour < hour || log.hour >= hour + 1)
+			if (file_extensions.find(log.document_type) != file_extensions.end())
+			{
+				continue;
+			}
+		}
+		if (hour != -1)
 		{
-			continue;
-	    }
-	}
+			if (log.hour < hour || log.hour >= hour + 1)
+			{
+				continue;
+			}
+		}
 
-	if (interactions.find(log.url) == interactions.end())
-	{
-	    unordered_map<string, int> referrers;
-	    interactions.insert(pair<string, unordered_map<string, int>>(log.url, referrers));
-	}
+		if (interactions.find(log.url) == interactions.end())
+		{
+			unordered_map<string, int> referrers;
+			interactions.insert(pair<string, unordered_map<string, int>>(log.url, referrers));
+		}
 
-	unordered_map<string, int> referrers = interactions.find(log.url)->second;
-	if (referrers.find(log.referer) == referrers.end())
-	{
-	    referrers.insert(pair<string, int>(log.referer, 0));
-	}
-	referrers[log.referer] += 1;
-	interactions[log.url] = referrers;
+		unordered_map<string, int> referrers = interactions.find(log.url)->second;
+		if (referrers.find(log.referer) == referrers.end())
+		{
+			referrers.insert(pair<string, int>(log.referer, 0));
+		}
+		referrers[log.referer] += 1;
+		interactions[log.url] = referrers;
 
 
-	if (hits.find(log.url) == hits.end())
-	{
-	    hits.insert({log.url, 0});
+		if (hits.find(log.url) == hits.end())
+		{
+			hits.insert({log.url, 0});
+		}
+		hits[log.url] += 1;
     }
-	hits[log.url] += 1;
-    }
 
-	if (hits.empty()) {
+	if (hits.empty())
+	{
         cout << "Aucun résultat trouvé pour les critères demandés." << endl;
         return;
     }
@@ -112,7 +122,8 @@ multimap<int, string> LogStats::GetDocumentByHit ( )
 //
 {
     multimap<int, string> docHits;
-    for (const pair<const string, int> & pair : hits) {
+    for (const pair<const string, int> & pair : hits)
+	{
         docHits.insert(make_pair(pair.second, pair.first));
     }
     return docHits;
@@ -128,23 +139,26 @@ void LogStats::loadConfig ()
     
     while (getline(config_file, line))
     {
-	regex url_re("base_url(\\s*):(\\s*)(\\S+)");
-	smatch match;
-	if (regex_search(line, match, url_re) && match.size() > 1) {
-	    base_url = match.str(3);
-	}
+		regex url_re("base_url(\\s*):(\\s*)(\\S+)");
+		smatch match;
+		if (regex_search(line, match, url_re) && match.size() > 1)
+		{
+			base_url = match.str(3);
+		}
 
-	size_t ext_pos = line.find("file_ext");
-	if (ext_pos != string::npos) {
-		regex ext_re("\"([a-zA-Z0-9]+)\"");
-	    sregex_iterator next(line.begin(), line.end(), ext_re);
-	    sregex_iterator end;
-	    while (next != end) {
-		smatch match = *next;
-		file_extensions.insert(match.str(1));
-		next++;
-	    }
-	}
+		size_t ext_pos = line.find("file_ext");
+		if (ext_pos != string::npos)
+		{
+			regex ext_re("\"([a-zA-Z0-9]+)\"");
+			sregex_iterator next(line.begin(), line.end(), ext_re);
+			sregex_iterator end;
+			while (next != end)
+			{
+				smatch match = *next;
+				file_extensions.insert(match.str(1));
+				next++;
+			}
+		}
     }
 
     config_file.close();

@@ -27,12 +27,13 @@ using namespace std;
 
 //------------------------------------------------------------------------
 // Rôle de la classe <GraphMaker>
-//
-//
+//    Cette classe assure la persistance du graphe d'analyse. Elle traduit
+//    les données d'interactions (source -> cible) au format textuel 
+//    GraphViz (.dot) pour permettre une visualisation ultérieure.
 //------------------------------------------------------------------------
 
-class GraphMaker{
-
+class GraphMaker
+{
   public:
   //----------------------------------------------------- Méthodes publiques
   void GenerateGraphFile(const unordered_map<string, unordered_map<string, int>>& analyzed_umap);
@@ -49,7 +50,7 @@ class GraphMaker{
   ~GraphMaker();
 
   //------------------------------------------------------------------ PRIVE
-  private:
+  protected:
   //----------------------------------------------------- Méthodes protégées
 
     inline void createNode(ofstream& of, const string& nodeName);
