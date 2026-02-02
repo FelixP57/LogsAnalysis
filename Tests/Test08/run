@@ -1,1 +1,1 @@
-../../analog -g graph.dot test8.log
+../../analog -e test8.log

@@ -1,8 +1,0 @@
-digraph {
- "/SiteWebIF/Intranet-etudiant.php";
- "/" -> "/SiteWebIF/Intranet-etudiant.php" [label="2"];
- "/temps/style_emploi_du_temps.css";
- "http://intranet-if.insa-lyon.fr/temps/" -> "/temps/style_emploi_du_temps.css" [label="3"];
- "/temps/";
- "http://www.google.fr/url" -> "/temps/" [label="1"];
-}

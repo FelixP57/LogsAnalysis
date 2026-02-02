@@ -1,0 +1,2 @@
+192.1 - - [01/Jan/2026:10:00:00 +0100] "GET /logo.png HTTP/1.1" 200 100 "-" "-"
+192.168.0.66 - - [08/Sep/2012:15:10:48 +0200] "GET /temps/suivant.gif HTTP/1.1" 200 1634 "http://intranet-if.insa-lyon.fr/temps/3IF37.html" "Mozilla/5.0 (Windows NT 6.1; rv:15.0) Gecko/20100101 Firefox/15.0.1"

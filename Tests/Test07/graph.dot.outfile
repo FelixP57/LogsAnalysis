@@ -1,10 +1,8 @@
 digraph {
- "/notesif/RSS/RSS_4IF.xml";
- "/notesif/RSS/RSS_4IF.xml" -> "/notesif/RSS/RSS_4IF.xml" [label="1"];
  "/SiteWebIF/Intranet-etudiant.php";
- "http://if.insa-lyon.fr/" -> "/SiteWebIF/Intranet-etudiant.php" [label="2"];
- "-" -> "/SiteWebIF/Intranet-etudiant.php" [label="1"];
+ "/" -> "/SiteWebIF/Intranet-etudiant.php" [label="2"];
+ "/temps/style_emploi_du_temps.css";
+ "http://intranet-if.insa-lyon.fr/temps/" -> "/temps/style_emploi_du_temps.css" [label="3"];
  "/temps/";
- "-" -> "/temps/" [label="1"];
  "http://www.google.fr/url" -> "/temps/" [label="1"];
 }

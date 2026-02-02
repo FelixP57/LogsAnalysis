@@ -1,3 +1,2 @@
 base_url: http://intranet-if.insa-lyon.fr
 file_ext: "png", "jpg", "jpeg", "gif", "svg", "webp", "ico", "bmp", "tiff", "tif", "avif", "heic", "heif", "svgz", "ai", "psd", "eps", "css", "js"
-
