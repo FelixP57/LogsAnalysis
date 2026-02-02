@@ -1,0 +1,4 @@
+digraph {
+ "/page.html";
+ "https://www.google.com/" -> "/page.html" [label="1"];
+}

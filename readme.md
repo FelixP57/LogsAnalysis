@@ -2,8 +2,6 @@
 
 **Analog** est un outil en ligne de commande développé en C++ conçu pour analyser les fichiers journaux (logs) des serveurs web Apache. Il permet d'extraire des statistiques de consultation et de visualiser le parcours des utilisateurs sous forme de graphe.
 
----
-
 ## Fonctionnalités
 
 L'application répond aux besoins d'analyse suivants :
@@ -13,9 +11,11 @@ L'application répond aux besoins d'analyse suivants :
 * **Filtrage horaire (-t)** : Limite l'analyse aux requêtes effectuées dans un créneau horaire spécifique `[heure, heure+1[`.
 
 ## Configuration
-Pour configurer notre analyseur de logs, il faut modifier le fichier config.txt. Ce fichier contient :
+Pour configurer l'analyseur de logs, il faut modifier le fichier config.txt. Ce fichier contient :
 - l'url utilisée comme base, considérée comme locale (par défaut : http://intranet-if.insa-lyon.fr)
-- les extensions des fichiers non pris en compte avec la commande -e (par défaut : les images, documents CSS et Javascript)
+- une liste des extensions des fichiers non pris en compte avec la commande -e (par défaut : les images, documents CSS et Javascript)
+
+*Exemple :* pour exclure l'extension `.webp`, ajoutez simplement `"webp"` à la liste existante dans le fichier.
 
 ## Utilisation
 
@@ -24,8 +24,6 @@ Le programme peut-être utilisé en exécutant la commande make puis la commande
 ```bash
 ./analog [-g nomfichier.dot] [-e] [-t heure] nomfichier.log
 ```
-
----
 
 ## Compilation
 
@@ -48,7 +46,6 @@ Utilisez la commande suivante dans votre terminal :
 
 ```bash
 dot -Tpng mon_graphe.dot -o graphe.png
-
 ```
 
 ### Détails de la commande :
@@ -59,6 +56,25 @@ dot -Tpng mon_graphe.dot -o graphe.png
 
 > Si votre graphe est très grand, essayez le format **SVG** (`-Tsvg`). Contrairement au PNG, vous pourrez zoomer sans perte de qualité.
 
-### Voici un aperçu du résultat :
+### Aperçu du résultat :
 [![Image du graphe qui peut être généré avec l'option -g](out.png)](out.png)
+
+## Gestion des Erreurs
+
+Le programme gère les cas d'utilisation invalides et informe l'utilisateur via `stderr` :
+
+* **Fichier introuvable** : "ERREUR : Le fichier [nom] n'a pas pu être ouvert !".
+* **Heure invalide** : "Erreur : L'heure doit être comprise entre 0 et 23.".
+* **Argument manquant** : Affiche l'aide à l'utilisation si aucun fichier de log n'est spécifié.
+
+
+## Procédure de Test
+
+Le projet intègre un framework de test pour valider les spécifications. Pour lancer la suite de tests automatisée, utilisez les commandes suivantes depuis la racine du projet :
+
+```bash
+cd ./tests/
+./mktest.sh
+```
+
 

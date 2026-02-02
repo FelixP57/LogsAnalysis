@@ -1,0 +1,4 @@
+digraph {
+ "/page.html";
+ "/index.html" -> "/page.html" [label="1"];
+}
