@@ -1,6 +1,4 @@
 digraph {
- "/temps/4IF18.html";
- "http://intranet-if.insa-lyon.fr/temps/4IF17.html" -> "/temps/4IF18.html" [label="1"];
- "/temps/4IF17.html";
- "http://intranet-if.insa-lyon.fr/temps/4IF16.html" -> "/temps/4IF17.html" [label="1"];
+ "/temps/3IF38.html";
+ "/temps/3IF37.html" -> "/temps/3IF38.html" [label="1"];
 }
